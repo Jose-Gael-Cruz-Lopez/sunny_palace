@@ -348,6 +348,7 @@ export default function ResumeReviews() {
       .select('id,handle,role_title,role_type,stage,target_companies,background_tags,file_name,allow_download,story,allow_annotation,status,created_at,avatar_url')
       .in('status', ['approved', 'featured'])
       .order('created_at', { ascending: false })
+      .limit(15)
       .then(({ data }) => {
         if (data?.length) setDbResumes(data.map(dbResumeToCard))
         setIsLoading(false)

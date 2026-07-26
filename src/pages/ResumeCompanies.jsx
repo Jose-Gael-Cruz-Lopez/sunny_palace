@@ -21,6 +21,7 @@ export default function ResumeCompanies() {
   const t = useT('resumeCompanies')
   const navigate = useNavigate()
   const [counts, setCounts] = useState({})
+  const [companiesError, setCompaniesError] = useState(null)
   const [search, setSearch] = useState('')
   const [activeLetter, setActiveLetter] = useState(null)
   const [reqName, setReqName] = useState('')
@@ -36,7 +37,13 @@ export default function ResumeCompanies() {
     supabase.from('resume_submissions')
       .select('target_companies')
       .in('status', ['approved', 'featured'])
-      .then(({ data }) => {
+      .limit(15)
+      .then(({ data, error }) => {
+        if (error) {
+          setCompaniesError(error)
+          return
+        }
+        setCompaniesError(null)
         if (!data) return
         const c = {}
         data.forEach(row => {
@@ -48,6 +55,7 @@ export default function ResumeCompanies() {
         setCounts(c)
       })
   }, [])
+
 
   const allCompanies = useMemo(() => {
     return Object.entries(COMPANY_CATALOG).map(([key, meta]) => ({

@@ -148,7 +148,7 @@ export default function OpportunityBoard() {
   }
 
   const [dbOpportunities, setDbOpportunities] = useState([])
-
+  const [dbError, setDbError] = useState(null)
   useEffect(() => {
     let raf = 0
     const update = () => {
@@ -193,7 +193,13 @@ export default function OpportunityBoard() {
       .select('id,role,company,role_type,link,deadline,eligibility,why,status,created_at,location,pay')
       .in('status', ['approved', 'featured'])
       .order('created_at', { ascending: false })
-      .then(({ data }) => {
+      .limit(20)
+      .then(({ data, error }) => {
+        if (error) {
+          setDbError(error)
+          return
+        }
+        setDbError(null)
         if (data?.length) setDbOpportunities(data.map(row => dbOpportunityToCard(row, t)))
       })
   }, [t])
