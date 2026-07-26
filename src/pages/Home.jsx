@@ -8,54 +8,32 @@ import Turnstile, { TURNSTILE_ENABLED } from '../components/Turnstile'
 gsap.registerPlugin(ScrollTrigger)
 
 const SEARCH_INDEX = [
-  {
-    label: 'About', description: 'Who we are & our story', type: 'section', target: '#about',
-    keywords: ['who we are', 'about us', 'our story', 'jose', 'jocelyn', 'founders', 'co-founders', 'creator', 'hosts', 'people behind', 'first gen', 'first generation', 'mexican american', 'latino', 'latina', 'hispanic', 'latinx', 'chicano', 'brown', 'immigrant', 'immigrants', 'underrepresented', 'minority', 'diversity', 'inclusion', 'equity', 'mission', 'vision', 'values', 'why', 'purpose', 'background', 'journey', 'path', 'how it started', 'origin story', 'why we built this', 'personal story', 'team', 'people', 'real', 'authentic', 'what is campus to career', 'what is this', 'about the platform', 'representation']
-  },
-  {
-    label: 'Services', description: 'All services overview', type: 'section', target: '#services',
-    keywords: ['services', 'all services', 'offerings', 'programs', 'what we do', 'what do you offer', 'help', 'resources', 'tools', 'features', 'overview', 'everything', 'explore', 'discover', 'platform', 'career help', 'career support', 'career resources', 'career tools', 'content', 'sprints', 'community', 'categories', 'navigation', 'where to go', 'what can i do here']
-  },
-  {
-    label: 'La Voz del Día', description: 'Daily editorial & career insights', type: 'section', target: '#editorial',
-    keywords: ['la voz', 'voz', 'blog', 'articles', 'article', 'editorial', 'daily', 'insights', 'reads', 'reading', 'posts', 'post', 'news', 'writing', 'content', 'career content', 'tips', 'advice', 'guides', 'how to', 'stories', 'perspectives', 'opinions', 'featured', 'latest', 'recent', 'subscribe', 'newsletter', 'digest', 'weekly', 'thought pieces', 'career stories', 'industry insights', 'career reads']
-  },
-  {
-    label: 'LinkedIn Series', description: 'Content · LinkedIn growth tips', type: 'page', to: '/linkedin-series',
-    keywords: ['linkedin', 'linked in', 'social media', 'profile', 'linkedin profile', 'optimize profile', 'profile tips', 'improve profile', 'headline', 'summary', 'about section', 'featured section', 'profile picture', 'banner', 'connections', 'followers', 'posts', 'posting', 'content creation', 'content strategy', 'thought leadership', 'articles', 'newsletter', 'carousel', 'personal brand', 'personal branding', 'brand yourself', 'visibility', 'reach', 'impressions', 'engagement', 'likes', 'comments', 'shares', 'algorithm', 'linkedin algorithm', 'beat the algorithm', 'get more views', 'networking online', 'online networking', 'connect on linkedin', 'linkedin networking', 'send connection request', 'inmail', 'online presence', 'digital presence', 'digital identity', 'online reputation', 'get noticed by recruiters', 'attract recruiters', 'linkedin jobs', 'series', 'episodes', 'tips', 'tricks', 'guide', 'growth', 'grow on linkedin']
-  },
-  {
-    label: 'Career Templates', description: 'Content · Plug-and-play career docs', type: 'page', to: '/career-templates',
-    keywords: ['templates', 'template', 'free templates', 'free resources', 'downloadable', 'download', 'resume template', 'resume format', 'resume example', 'resume sample', 'ats resume', 'cover letter', 'cover letter template', 'cover letter example', 'how to write cover letter', 'email template', 'professional email', 'cold email template', 'follow up email', 'follow up', 'thank you email', 'thank you note', 'after interview email', 'networking email', 'reach out email', 'introduction email', 'linkedin message template', 'linkedin outreach', 'cold message', 'salary negotiation', 'negotiate offer', 'negotiate salary', 'counter offer', 'how to negotiate', 'negotiation script', 'negotiation email', 'negotiation', 'tracker', 'job tracker', 'application tracker', 'track applications', 'stay organized', 'spreadsheet', 'job search tracker', 'application spreadsheet', 'career tracker', '30 60 90', 'brag document', 'brag doc', 'goal setting', 'documents', 'docs', 'google doc', 'notion', 'scripts', 'plug and play', 'copy paste', 'materials', 'career documents', 'plug in', 'ready to use']
-  },
-  {
-    label: 'Bridge Year Sprint', description: 'Sprints · Bridge year program', type: 'page', to: '/bridge-year', comingSoon: true,
-    keywords: ['bridge year', 'gap year', 'underclassmen', 'freshman', 'freshmen', 'sophomore', 'junior', 'first year', 'second year', 'third year', '1st year', '2nd year', '3rd year', 'early in college', 'new to college', 'just started college', 'early career', 'beginner', 'new to tech', 'new to industry', 'just starting', 'getting started', 'start', 'foundation', 'no experience', 'no internship yet', 'build experience', 'first internship', 'land first internship', 'break into tech', 'break into industry', 'pivot', 'career switcher', 'program', 'cohort', 'sprint', 'accountability', 'structured program', 'curriculum', 'first gen', 'nontraditional', 'transfer student', 'community college', 'returning student', 'underprivileged', 'low income', 'limited resources', 'lost', 'confused', 'overwhelmed', 'dont know where to start', 'where do i start', 'what should i do', 'need direction', 'what to do', 'roadmap', 'plan', 'career plan', 'career path', 'career roadmap', 'explore', 'discover', 'next steps', 'step by step', 'where to begin', 'early stage', 'guidance', 'help me start']
-  },
-  {
-    label: 'Interview Prep', description: 'Sprints · Interview preparation', type: 'page', to: '/interview-prep', comingSoon: true,
-    keywords: ['interview', 'interviews', 'prep', 'preparation', 'prepare', 'practice', 'mock', 'mock interview', 'practice interview', 'get ready for interview', 'technical interview', 'coding interview', 'behavioral interview', 'system design interview', 'product interview', 'pm interview', 'design interview', 'case interview', 'consulting interview', 'finance interview', 'behavioral', 'technical', 'coding', 'algorithm', 'algorithms', 'data structure', 'data structures', 'dynamic programming', 'binary search', 'trees', 'graphs', 'arrays', 'linked list', 'recursion', 'big o', 'time complexity', 'leetcode', 'leet code', 'hackerrank', 'codewars', 'oa', 'online assessment', 'coding challenge', 'take home', 'star method', 'star framework', 'tell me about yourself', 'greatest strength', 'weakness', 'why this company', 'why this role', 'leadership', 'teamwork', 'conflict', 'failure', 'success', 'accomplishment', 'behavioral questions', 'faang', 'maang', 'big tech', 'google', 'meta', 'amazon', 'microsoft', 'apple', 'netflix', 'stripe', 'airbnb', 'uber', 'doordash', 'startup', 'underclassmen', 'new grad', 'new graduate', 'entry level', 'junior', 'tips', 'how to', 'guide', 'cheat sheet', 'nervous', 'anxious', 'scared', 'intimidated', 'unprepared', 'struggling', 'failing interviews', 'bombing interviews', 'need help', 'confidence', 'offer', 'job offer', 'return offer', 'rejection', 'rejected', 'phone screen', 'phone interview', 'technical screen', 'onsite', 'virtual interview', 'zoom interview', 'questions', 'common questions', 'internship interview', 'job interview', 'intern', 'cracking the interview', 'python', 'java', 'javascript', 'sql']
-  },
-  {
-    label: 'Opportunity Board', description: 'Community · Jobs & internships', type: 'page', to: '/opportunity-board',
-    keywords: ['jobs', 'job', 'work', 'gig', 'career', 'internship', 'internships', 'intern', 'opportunities', 'opportunity', 'listing', 'listings', 'posting', 'postings', 'board', 'apply', 'application', 'applying', 'hire', 'hiring', 'recruited', 'recruiting', 'recruiter', 'hr', 'human resources', 'new grad', 'new graduate', 'recent grad', 'recent graduate', 'fresh grad', 'college grad', 'entry level', 'junior', 'first job', 'first real job', 'post grad', 'after college', 'after graduation', 'no experience', '0 years experience', 'summer', 'summer 2025', 'summer 2026', 'summer internship', 'summer program', 'fall', 'spring', 'winter', 'co-op', 'coop', 'fellowship', 'apprenticeship', 'full time', 'fulltime', 'part time', 'contract', 'freelance', 'remote', 'hybrid', 'in person', 'onsite', 'relocation', 'paid', 'stipend', 'salary', 'compensation', 'hourly', 'wage', 'unpaid', 'role', 'position', 'opening', 'employment', 'company', 'job board', 'job search', 'job hunting', 'find a job', 'find work', 'career opportunities', 'tech job', 'technology', 'software', 'engineering', 'software engineer', 'swe', 'product manager', 'pm', 'tpm', 'data science', 'data analytics', 'ux', 'ui', 'design', 'marketing', 'finance', 'consulting', 'banking', 'investment banking', 'healthcare', 'biotech', 'startup', 'faang', 'google', 'meta', 'amazon', 'microsoft', 'apple', 'business', 'mis', 'non-cs', 'nontechnical', 'stem', 'cs', 'computer science', 'diversity hiring', 'underrepresented', 'visa', 'sponsorship', 'opt', 'cpt', 'h1b', 'international', 'where to find jobs', 'career search']
-  },
-  {
-    label: 'Coffee Chat Network', description: 'Community · Connect with professionals', type: 'page', to: '/coffee-chat',
-    keywords: ['coffee chat', 'coffee chats', 'virtual coffee', 'grab coffee', 'coffee meeting', 'networking', 'network', 'build connections', 'connect', 'connection', 'connections', 'meet professionals', 'meet people', 'reach out', 'cold email', 'cold outreach', 'linkedin message', 'mentor', 'mentors', 'mentorship', 'mentoring', 'mentee', 'find a mentor', 'get mentored', 'advisory', 'advisor', 'guide', 'guidance', 'career guidance', 'career advice', 'informational interview', 'info interview', 'info chat', 'industry insights', 'learning from professionals', 'professional', 'professionals', 'industry professional', 'industry expert', 'recruiter', 'hiring manager', 'engineer', 'designer', 'alumni', 'alum', 'alums', 'upperclassmen', 'peers', 'community', 'people', 'relationship', 'relationship building', 'professional development', 'professional network', 'talk to someone', 'talk to someone in the industry', 'get advice', 'ask questions', 'career questions', 'career path', 'day in the life', 'what is it like to work at', 'company culture', 'chat', 'talk', 'conversation', 'meet', 'meeting', 'zoom call', 'phone call', 'virtual meeting', 'advice', 'support', 'learn', 'how to reach out', 'how to network']
-  },
-  {
-    label: 'Resume Reviews', description: 'Community · Get your resume reviewed', type: 'page', to: '/resume-reviews',
-    keywords: ['resume', 'resumes', 'cv', 'curriculum vitae', 'bio', 'professional profile', 'review', 'reviews', 'reviewed', 'feedback', 'critique', 'critiqued', 'help', 'resume help', 'improve', 'improve resume', 'fix', 'fix my resume', 'check', 'check my resume', 'proofread', 'edit', 'polish', 'polish up', 'ats', 'ats friendly', 'applicant tracking', 'keyword', 'keywords', 'format', 'formatting', 'layout', 'design', 'one page', 'two page', 'one pager', 'chronological', 'functional', 'skills', 'experience', 'work experience', 'projects', 'extracurriculars', 'clubs', 'gpa', 'education', 'certifications', 'awards', 'honors', 'leadership', 'bullet points', 'action verbs', 'quantify', 'metrics', 'numbers', 'accomplishments', 'achievements', 'results', 'student resume', 'college resume', 'undergrad resume', 'undergraduate', 'graduate', 'new grad resume', 'entry level resume', 'first resume', 'no experience resume', 'limited experience', 'tech resume', 'software engineer resume', 'swe resume', 'pm resume', 'product manager resume', 'data science resume', 'ux resume', 'marketing resume', 'internship resume', 'career changer resume', 'transfer student', 'nontraditional', 'international student resume', 'get reviewed', 'submit resume', 'share resume', 'see other resumes', 'browse resumes', 'resume examples', 'resume inspiration', 'showcase', 'upload', 'first gen resume', 'weak resume', 'strong resume', 'bad resume']
-  },
-  {
-    label: 'Partner Panels', description: 'Community · Live panels with partners', type: 'page', to: '/partner-panels', comingSoon: true,
-    keywords: ['panel', 'panels', 'event', 'events', 'live', 'live event', 'webinar', 'webinars', 'talk', 'talks', 'speaker', 'speakers', 'panelist', 'panelists', 'industry talk', 'industry expert', 'fireside chat', 'fireside chats', 'roundtable', 'summit', 'workshop', 'seminar', 'recording', 'recordings', 'replay', 'rewatch', 'watch', 'listen', 'video', 'watch again', 'presentation', 'q&a', 'qa', 'questions', 'discussion', 'conversation', 'partners', 'partner', 'partner companies', 'company', 'sponsor', 'recruiter panel', 'alumni panel', 'career panel', 'tech panel', 'diversity panel', 'first gen panel', 'recruiting panel', 'zoom', 'virtual', 'online', 'live stream', 'past events', 'archive', 'past panels', 'previous panels', 'rsvp', 'register', 'sign up', 'attend', 'upcoming', 'schedule', 'next event', 'future events', '30 under 30', 'industry professionals speaking', 'hear from professionals', 'learn from professionals']
-  },
+  { label: 'About', description: 'Who we are & our story', type: 'section', target: '#about',
+    keywords: ['who we are', 'about us', 'our story', 'jose', 'jocelyn', 'founders', 'co-founders', 'creator', 'hosts', 'people behind', 'first gen', 'first generation', 'mexican american', 'latino', 'latina', 'hispanic', 'latinx', 'chicano', 'brown', 'immigrant', 'immigrants', 'underrepresented', 'minority', 'diversity', 'inclusion', 'equity', 'mission', 'vision', 'values', 'why', 'purpose', 'background', 'journey', 'path', 'how it started', 'origin story', 'why we built this', 'personal story', 'team', 'people', 'real', 'authentic', 'what is campus to career', 'what is this', 'about the platform', 'representation'] },
+  { label: 'Services', description: 'All services overview', type: 'section', target: '#services',
+    keywords: ['services', 'all services', 'offerings', 'programs', 'what we do', 'what do you offer', 'help', 'resources', 'tools', 'features', 'overview', 'everything', 'explore', 'discover', 'platform', 'career help', 'career support', 'career resources', 'career tools', 'content', 'sprints', 'community', 'categories', 'navigation', 'where to go', 'what can i do here'] },
+  { label: 'La Voz del Día', description: 'Daily editorial & career insights', type: 'section', target: '#editorial',
+    keywords: ['la voz', 'voz', 'blog', 'articles', 'article', 'editorial', 'daily', 'insights', 'reads', 'reading', 'posts', 'post', 'news', 'writing', 'content', 'career content', 'tips', 'advice', 'guides', 'how to', 'stories', 'perspectives', 'opinions', 'featured', 'latest', 'recent', 'subscribe', 'newsletter', 'digest', 'weekly', 'thought pieces', 'career stories', 'industry insights', 'career reads'] },
+  { label: 'LinkedIn Series', description: 'Content · LinkedIn growth tips', type: 'page', to: '/linkedin-series',
+    keywords: ['linkedin', 'linked in', 'social media', 'profile', 'linkedin profile', 'optimize profile', 'profile tips', 'improve profile', 'headline', 'summary', 'about section', 'featured section', 'profile picture', 'banner', 'connections', 'followers', 'posts', 'posting', 'content creation', 'content strategy', 'thought leadership', 'articles', 'newsletter', 'carousel', 'personal brand', 'personal branding', 'brand yourself', 'visibility', 'reach', 'impressions', 'engagement', 'likes', 'comments', 'shares', 'algorithm', 'linkedin algorithm', 'beat the algorithm', 'get more views', 'networking online', 'online networking', 'connect on linkedin', 'linkedin networking', 'send connection request', 'inmail', 'online presence', 'digital presence', 'digital identity', 'online reputation', 'get noticed by recruiters', 'attract recruiters', 'linkedin jobs', 'series', 'episodes', 'tips', 'tricks', 'guide', 'growth', 'grow on linkedin'] },
+  { label: 'Career Templates', description: 'Content · Plug-and-play career docs', type: 'page', to: '/career-templates',
+    keywords: ['templates', 'template', 'free templates', 'free resources', 'downloadable', 'download', 'resume template', 'resume format', 'resume example', 'resume sample', 'ats resume', 'cover letter', 'cover letter template', 'cover letter example', 'how to write cover letter', 'email template', 'professional email', 'cold email template', 'follow up email', 'follow up', 'thank you email', 'thank you note', 'after interview email', 'networking email', 'reach out email', 'introduction email', 'linkedin message template', 'linkedin outreach', 'cold message', 'salary negotiation', 'negotiate offer', 'negotiate salary', 'counter offer', 'how to negotiate', 'negotiation script', 'negotiation email', 'negotiation', 'tracker', 'job tracker', 'application tracker', 'track applications', 'stay organized', 'spreadsheet', 'job search tracker', 'application spreadsheet', 'career tracker', '30 60 90', 'brag document', 'brag doc', 'goal setting', 'documents', 'docs', 'google doc', 'notion', 'scripts', 'plug and play', 'copy paste', 'materials', 'career documents', 'plug in', 'ready to use'] },
+  { label: 'Bridge Year Sprint', description: 'Sprints · Bridge year program', type: 'page', to: '/bridge-year', comingSoon: true,
+    keywords: ['bridge year', 'gap year', 'underclassmen', 'freshman', 'freshmen', 'sophomore', 'junior', 'first year', 'second year', 'third year', '1st year', '2nd year', '3rd year', 'early in college', 'new to college', 'just started college', 'early career', 'beginner', 'new to tech', 'new to industry', 'just starting', 'getting started', 'start', 'foundation', 'no experience', 'no internship yet', 'build experience', 'first internship', 'land first internship', 'break into tech', 'break into industry', 'pivot', 'career switcher', 'program', 'cohort', 'sprint', 'accountability', 'structured program', 'curriculum', 'first gen', 'nontraditional', 'transfer student', 'community college', 'returning student', 'underprivileged', 'low income', 'limited resources', 'lost', 'confused', 'overwhelmed', 'dont know where to start', 'where do i start', 'what should i do', 'need direction', 'what to do', 'roadmap', 'plan', 'career plan', 'career path', 'career roadmap', 'explore', 'discover', 'next steps', 'step by step', 'where to begin', 'early stage', 'guidance', 'help me start'] },
+  { label: 'Interview Prep', description: 'Sprints · Interview preparation', type: 'page', to: '/interview-prep', comingSoon: true,
+    keywords: ['interview', 'interviews', 'prep', 'preparation', 'prepare', 'practice', 'mock', 'mock interview', 'practice interview', 'get ready for interview', 'technical interview', 'coding interview', 'behavioral interview', 'system design interview', 'product interview', 'pm interview', 'design interview', 'case interview', 'consulting interview', 'finance interview', 'behavioral', 'technical', 'coding', 'algorithm', 'algorithms', 'data structure', 'data structures', 'dynamic programming', 'binary search', 'trees', 'graphs', 'arrays', 'linked list', 'recursion', 'big o', 'time complexity', 'leetcode', 'leet code', 'hackerrank', 'codewars', 'oa', 'online assessment', 'coding challenge', 'take home', 'star method', 'star framework', 'tell me about yourself', 'greatest strength', 'weakness', 'why this company', 'why this role', 'leadership', 'teamwork', 'conflict', 'failure', 'success', 'accomplishment', 'behavioral questions', 'faang', 'maang', 'big tech', 'google', 'meta', 'amazon', 'microsoft', 'apple', 'netflix', 'stripe', 'airbnb', 'uber', 'doordash', 'startup', 'underclassmen', 'new grad', 'new graduate', 'entry level', 'junior', 'tips', 'how to', 'guide', 'cheat sheet', 'nervous', 'anxious', 'scared', 'intimidated', 'unprepared', 'struggling', 'failing interviews', 'bombing interviews', 'need help', 'confidence', 'offer', 'job offer', 'return offer', 'rejection', 'rejected', 'phone screen', 'phone interview', 'technical screen', 'onsite', 'virtual interview', 'zoom interview', 'questions', 'common questions', 'internship interview', 'job interview', 'intern', 'cracking the interview', 'python', 'java', 'javascript', 'sql'] },
+  { label: 'Opportunity Board', description: 'Community · Jobs & internships', type: 'page', to: '/opportunity-board',
+    keywords: ['jobs', 'job', 'work', 'gig', 'career', 'internship', 'internships', 'intern', 'opportunities', 'opportunity', 'listing', 'listings', 'posting', 'postings', 'board', 'apply', 'application', 'applying', 'hire', 'hiring', 'recruited', 'recruiting', 'recruiter', 'hr', 'human resources', 'new grad', 'new graduate', 'recent grad', 'recent graduate', 'fresh grad', 'college grad', 'entry level', 'junior', 'first job', 'first real job', 'post grad', 'after college', 'after graduation', 'no experience', '0 years experience', 'summer', 'summer 2025', 'summer 2026', 'summer internship', 'summer program', 'fall', 'spring', 'winter', 'co-op', 'coop', 'fellowship', 'apprenticeship', 'full time', 'fulltime', 'part time', 'contract', 'freelance', 'remote', 'hybrid', 'in person', 'onsite', 'relocation', 'paid', 'stipend', 'salary', 'compensation', 'hourly', 'wage', 'unpaid', 'role', 'position', 'opening', 'employment', 'company', 'job board', 'job search', 'job hunting', 'find a job', 'find work', 'career opportunities', 'tech job', 'technology', 'software', 'engineering', 'software engineer', 'swe', 'product manager', 'pm', 'tpm', 'data science', 'data analytics', 'ux', 'ui', 'design', 'marketing', 'finance', 'consulting', 'banking', 'investment banking', 'healthcare', 'biotech', 'startup', 'faang', 'google', 'meta', 'amazon', 'microsoft', 'apple', 'business', 'mis', 'non-cs', 'nontechnical', 'stem', 'cs', 'computer science', 'diversity hiring', 'underrepresented', 'visa', 'sponsorship', 'opt', 'cpt', 'h1b', 'international', 'where to find jobs', 'career search'] },
+  { label: 'Coffee Chat Network', description: 'Community · Connect with professionals', type: 'page', to: '/coffee-chat',
+    keywords: ['coffee chat', 'coffee chats', 'virtual coffee', 'grab coffee', 'coffee meeting', 'networking', 'network', 'build connections', 'connect', 'connection', 'connections', 'meet professionals', 'meet people', 'reach out', 'cold email', 'cold outreach', 'linkedin message', 'mentor', 'mentors', 'mentorship', 'mentoring', 'mentee', 'find a mentor', 'get mentored', 'advisory', 'advisor', 'guide', 'guidance', 'career guidance', 'career advice', 'informational interview', 'info interview', 'info chat', 'industry insights', 'learning from professionals', 'professional', 'professionals', 'industry professional', 'industry expert', 'recruiter', 'hiring manager', 'engineer', 'designer', 'alumni', 'alum', 'alums', 'upperclassmen', 'peers', 'community', 'people', 'relationship', 'relationship building', 'professional development', 'professional network', 'talk to someone', 'talk to someone in the industry', 'get advice', 'ask questions', 'career questions', 'career path', 'day in the life', 'what is it like to work at', 'company culture', 'chat', 'talk', 'conversation', 'meet', 'meeting', 'zoom call', 'phone call', 'virtual meeting', 'advice', 'support', 'learn', 'how to reach out', 'how to network'] },
+  { label: 'Resume Reviews', description: 'Community · Get your resume reviewed', type: 'page', to: '/resume-reviews',
+    keywords: ['resume', 'resumes', 'cv', 'curriculum vitae', 'bio', 'professional profile', 'review', 'reviews', 'reviewed', 'feedback', 'critique', 'critiqued', 'help', 'resume help', 'improve', 'improve resume', 'fix', 'fix my resume', 'check', 'check my resume', 'proofread', 'edit', 'polish', 'polish up', 'ats', 'ats friendly', 'applicant tracking', 'keyword', 'keywords', 'format', 'formatting', 'layout', 'design', 'one page', 'two page', 'one pager', 'chronological', 'functional', 'skills', 'experience', 'work experience', 'projects', 'extracurriculars', 'clubs', 'gpa', 'education', 'certifications', 'awards', 'honors', 'leadership', 'bullet points', 'action verbs', 'quantify', 'metrics', 'numbers', 'accomplishments', 'achievements', 'results', 'student resume', 'college resume', 'undergrad resume', 'undergraduate', 'graduate', 'new grad resume', 'entry level resume', 'first resume', 'no experience resume', 'limited experience', 'tech resume', 'software engineer resume', 'swe resume', 'pm resume', 'product manager resume', 'data science resume', 'ux resume', 'marketing resume', 'internship resume', 'career changer resume', 'transfer student', 'nontraditional', 'international student resume', 'get reviewed', 'submit resume', 'share resume', 'see other resumes', 'browse resumes', 'resume examples', 'resume inspiration', 'showcase', 'upload', 'first gen resume', 'weak resume', 'strong resume', 'bad resume'] },
+  { label: 'Partner Panels', description: 'Community · Live panels with partners', type: 'page', to: '/partner-panels', comingSoon: true,
+    keywords: ['panel', 'panels', 'event', 'events', 'live', 'live event', 'webinar', 'webinars', 'talk', 'talks', 'speaker', 'speakers', 'panelist', 'panelists', 'industry talk', 'industry expert', 'fireside chat', 'fireside chats', 'roundtable', 'summit', 'workshop', 'seminar', 'recording', 'recordings', 'replay', 'rewatch', 'watch', 'listen', 'video', 'watch again', 'presentation', 'q&a', 'qa', 'questions', 'discussion', 'conversation', 'partners', 'partner', 'partner companies', 'company', 'sponsor', 'recruiter panel', 'alumni panel', 'career panel', 'tech panel', 'diversity panel', 'first gen panel', 'recruiting panel', 'zoom', 'virtual', 'online', 'live stream', 'past events', 'archive', 'past panels', 'previous panels', 'rsvp', 'register', 'sign up', 'attend', 'upcoming', 'schedule', 'next event', 'future events', '30 under 30', 'industry professionals speaking', 'hear from professionals', 'learn from professionals'] },
 ]
 
-const CONFETTI_COLORS = ['#E8A838', '#B34539', '#3A7D6B', '#5B8EC2', '#F2E4CE', '#f5c026', '#ff6b6b', '#ff9ff3', '#54a0ff', '#5f27cd', '#01a3a4', '#feca57', '#ff6348', '#7bed9f']
-const PINATA_STAGES = [{ at: 0, src: '/pinanta/step1.png' }, { at: 3, src: '/pinanta/step2.png' }, { at: 5, src: '/pinanta/step3.png' }]
+const CONFETTI_COLORS = ['#E8A838','#B34539','#3A7D6B','#5B8EC2','#F2E4CE','#f5c026','#ff6b6b','#ff9ff3','#54a0ff','#5f27cd','#01a3a4','#feca57','#ff6348','#7bed9f']
+const PINATA_STAGES = [{ at: 0, src: '/pinanta/step1.png' },{ at: 3, src: '/pinanta/step2.png' },{ at: 5, src: '/pinanta/step3.png' }]
 const HITS_TO_BREAK = 7
 
 // Waitlist mode: when true, hides nav links, search, and every section after the hero,
@@ -68,6 +46,7 @@ export default function Home() {
   const navigate = useNavigate()
   const { lang, setLang } = useLang()
   const t = useT('home')
+  const tForms = useT('forms')
   const tNav = useT('nav')
 
   const [searchOpen, setSearchOpen] = useState(false)
@@ -83,6 +62,7 @@ export default function Home() {
   const [modalLoading, setModalLoading] = useState(false)
   const [modalError, setModalError] = useState('')
   const [modalToken, setModalToken] = useState('')
+  const [modalTurnstileError, setModalTurnstileError] = useState(false)
   const modalTurnstileReset = useRef(null)
   const [waitlistOpen, setWaitlistOpen] = useState(false)
   const [waitlistSent, setWaitlistSent] = useState(false)
@@ -92,6 +72,7 @@ export default function Home() {
   const [waitlistLoading, setWaitlistLoading] = useState(false)
   const [waitlistError, setWaitlistError] = useState('')
   const [waitlistToken, setWaitlistToken] = useState('')
+  const [waitlistTurnstileError, setWaitlistTurnstileError] = useState(false)
   const waitlistTurnstileReset = useRef(null)
   const waitlistRef = useRef(null)
   const [newsletterOpen, setNewsletterOpen] = useState(false)
@@ -100,11 +81,9 @@ export default function Home() {
   const [newsletterLoading, setNewsletterLoading] = useState(false)
   const [newsletterError, setNewsletterError] = useState('')
   const [newsletterToken, setNewsletterToken] = useState('')
+  const [newsletterTurnstileError, setNewsletterTurnstileError] = useState(false)
   const newsletterTurnstileReset = useRef(null)
   const newsletterRef = useRef(null)
-  const [turnstileErrorWaitlist, setTurnstileErrorWaitlist] = useState(false)
-  const [turnstileErrorNewsletter, setTurnstileErrorNewsletter] = useState(false)
-  const [turnstileErrorContact, setTurnstileErrorContact] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [navOnHero, setNavOnHero] = useState(true)
   const [navHidden, setNavHidden] = useState(false)
@@ -125,24 +104,6 @@ export default function Home() {
   const loaderFillRef = useRef(null)
   const gsapCtxRef = useRef(null)
   const modalRef = useRef(null)
-
-  useEffect(() => {
-    if (waitlistToken) {
-      setTurnstileErrorWaitlist(false)
-    }
-  }, [waitlistToken])
-
-  useEffect(() => {
-    if (newsletterToken) {
-      setTurnstileErrorNewsletter(false)
-    }
-  }, [newsletterToken])
-
-  useEffect(() => {
-    if (modalToken) {
-      setTurnstileErrorContact(false)
-    }
-  }, [modalToken])
 
   const openModal = useCallback((e) => {
     e?.preventDefault()
@@ -436,12 +397,12 @@ export default function Home() {
       return {
         cy,
         slots: [
-          { x: cx - tw * 0.37, w: bigW, rotate: 0, z: 3, opacity: 1 },
-          { x: cx - tw * 0.17, w: smallW, rotate: 12, z: 2, opacity: 1 },
-          { x: cx, w: centerW, rotate: 0, z: 5, opacity: 1 },
-          { x: cx + tw * 0.17, w: smallW, rotate: -10, z: 2, opacity: 1 },
-          { x: cx + tw * 0.37, w: bigW, rotate: 0, z: 3, opacity: 1 },
-          { x: cx + tw * 0.58, w: bigW, rotate: 0, z: 0, opacity: 0 },
+          { x: cx - tw * 0.37, w: bigW,    rotate:   0, z: 3, opacity: 1 },
+          { x: cx - tw * 0.17, w: smallW,  rotate:  12, z: 2, opacity: 1 },
+          { x: cx,             w: centerW, rotate:   0, z: 5, opacity: 1 },
+          { x: cx + tw * 0.17, w: smallW,  rotate: -10, z: 2, opacity: 1 },
+          { x: cx + tw * 0.37, w: bigW,    rotate:   0, z: 3, opacity: 1 },
+          { x: cx + tw * 0.58, w: bigW,    rotate:   0, z: 0, opacity: 0 },
         ],
       }
     }
@@ -584,7 +545,7 @@ export default function Home() {
           try {
             const resolved = new URL(href, window.location.href)
             if (resolved.origin + resolved.pathname !== window.location.origin + window.location.pathname) return
-          } catch { }
+          } catch {}
         }
       }
       const { clientX: x, clientY: y } = e
@@ -629,10 +590,8 @@ export default function Home() {
     gsap.from('.services__body', { scrollTrigger: { trigger: '.services__content', start: 'top 75%', toggleActions: toggle }, y: 40, opacity: 0, duration: 0.8, ease: 'power2.out' })
     gsap.fromTo('.interr__char',
       { color: 'rgba(255,255,255,0.2)' },
-      {
-        color: '#ffffff', stagger: 0.04, duration: 0.3, ease: 'none',
-        scrollTrigger: { trigger: '.interr', start: 'top 75%', end: 'bottom 35%', scrub: 0.6 }
-      }
+      { color: '#ffffff', stagger: 0.04, duration: 0.3, ease: 'none',
+        scrollTrigger: { trigger: '.interr', start: 'top 75%', end: 'bottom 35%', scrub: 0.6 } }
     )
     if (window.innerWidth >= 1024) {
       gsap.to('.interr__bar--cream', { scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 0.35 }, y: -40, ease: 'none' })
@@ -652,12 +611,10 @@ export default function Home() {
     if (nav) {
       ScrollTrigger.create({ trigger: '.hero', start: 'top top', end: 'bottom top', onLeave: () => { setNavOnHero(false) }, onEnterBack: () => { setNavOnHero(true) } })
       if (window.innerWidth >= 1024) {
-        ScrollTrigger.create({
-          trigger: '.hero', start: 'top top', end: 'bottom top', onUpdate(self) {
-            const el = document.querySelector('.hero__inner')
-            if (el) { el.style.opacity = 1 - self.progress * 1.5; el.style.transform = `scale(${1 - self.progress * 0.12}) translateY(${self.progress * -60}px)` }
-          }
-        })
+        ScrollTrigger.create({ trigger: '.hero', start: 'top top', end: 'bottom top', onUpdate(self) {
+          const el = document.querySelector('.hero__inner')
+          if (el) { el.style.opacity = 1 - self.progress * 1.5; el.style.transform = `scale(${1 - self.progress * 0.12}) translateY(${self.progress * -60}px)` }
+        }})
       }
     }
 
@@ -728,13 +685,13 @@ export default function Home() {
         .to(panels[1], { xPercent: 100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe+=0.08')
         .to(panels[2], { xPercent: -100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe+=0.16')
         .call(() => { setLoaderDone(true); afterLoader() })
-        .fromTo('.hero__sun', { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.75, ease: 'power2.out', stagger: 0.1 }, 'wipe')
-        .fromTo('.hero__j', { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 1.0, ease: 'power3.out', stagger: 0.13 }, 'wipe+=0.05')
-        .fromTo('.hero__x', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.7, ease: 'power2.out' }, 'wipe+=0.2')
-        .fromTo('.hero__names', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 'wipe+=0.3')
-        .fromTo('.hero__tagline', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' }, 'wipe+=0.4')
-        .fromTo('.hero__rule', { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.out', transformOrigin: 'center center' }, 'wipe+=0.48')
-        .fromTo('.hero__foot', { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, 'wipe+=0.55')
+        .fromTo('.hero__sun',     { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.75, ease: 'power2.out', stagger: 0.1 }, 'wipe')
+        .fromTo('.hero__j',       { y: 80, opacity: 0 },       { y: 0, opacity: 1, duration: 1.0, ease: 'power3.out', stagger: 0.13 }, 'wipe+=0.05')
+        .fromTo('.hero__x',       { scale: 0, opacity: 0 },    { scale: 1, opacity: 1, duration: 0.7, ease: 'power2.out' }, 'wipe+=0.2')
+        .fromTo('.hero__names',   { y: 20, opacity: 0 },       { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 'wipe+=0.3')
+        .fromTo('.hero__tagline', { y: 16, opacity: 0 },       { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' }, 'wipe+=0.4')
+        .fromTo('.hero__rule',    { scaleX: 0, opacity: 0 },   { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.out', transformOrigin: 'center center' }, 'wipe+=0.48')
+        .fromTo('.hero__foot',    { y: 12, opacity: 0 },       { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, 'wipe+=0.55')
     }
 
     return () => {
@@ -888,7 +845,7 @@ export default function Home() {
         <div className="search-overlay" onClick={closeSearch}>
           <div className="search-palette" onClick={e => e.stopPropagation()} onKeyDown={e => e.key === 'Escape' && closeSearch()}>
             <div className="search-palette__bar">
-              <svg className="search-palette__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.7" /><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
+              <svg className="search-palette__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.7"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
               <input
                 ref={searchInputRef}
                 className="search-palette__input"
@@ -939,7 +896,7 @@ export default function Home() {
           {!WAITLIST_MODE && (
             <>
               <button className="nav__search-btn" aria-label={tNav.searchBtnLabel} onClick={openSearch}>
-                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="17" height="17"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8" /><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="17" height="17"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
               </button>
               <a href="#about" className="nav__link">{tNav.about}</a>
               <div className="nav__services-wrap">
@@ -992,7 +949,7 @@ export default function Home() {
         </div>
         {!WAITLIST_MODE && (
           <button className="nav__search-btn nav__search-btn--mobile" aria-label={tNav.searchBtnLabel} onClick={openSearch}>
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="19" height="19"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8" /><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="19" height="19"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
           </button>
         )}
         {!WAITLIST_MODE && (
@@ -1011,444 +968,444 @@ export default function Home() {
 
       {/* MOBILE NAV */}
       {!WAITLIST_MODE && (
-        <div className={`mobile-nav${menuOpen ? ' mobile-nav--open' : ''}`} id="mobileNav" role="navigation" aria-label="Mobile navigation" aria-hidden={!menuOpen}>
-          <button className="mobile-nav__search" aria-label={tNav.searchBtnLabel} onClick={() => { setMenuOpen(false); openSearch() }}>
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="20" height="20"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.7" /><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
-            <span>{tNav.mobileSearch}</span>
-          </button>
-          <button
-            className="nav__lang-btn mobile-nav__link"
-            onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
-            aria-label={tNav.langToggleLabel}
-            style={{ fontSize: 'clamp(22px, 4.5vw, 32px)', fontWeight: 500 }}
-          >
-            <span className={lang === 'en' ? 'nav__lang-active' : 'nav__lang-inactive'}>EN</span>
-            <span className="nav__lang-sep"> · </span>
-            <span className={lang === 'es' ? 'nav__lang-active' : 'nav__lang-inactive'}>ES</span>
-          </button>
-          <a href="#about" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.about}</a>
-          <a href="#services" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.services}</a>
-          <a href="#editorial" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.laVoz}</a>
-          <button className="mobile-nav__link" onClick={() => { setMenuOpen(false); openModal() }}>{tNav.getInTouch}</button>
-        </div>
+      <div className={`mobile-nav${menuOpen ? ' mobile-nav--open' : ''}`} id="mobileNav" role="navigation" aria-label="Mobile navigation" aria-hidden={!menuOpen}>
+        <button className="mobile-nav__search" aria-label={tNav.searchBtnLabel} onClick={() => { setMenuOpen(false); openSearch() }}>
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="20" height="20"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.7"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
+          <span>{tNav.mobileSearch}</span>
+        </button>
+        <button
+          className="nav__lang-btn mobile-nav__link"
+          onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
+          aria-label={tNav.langToggleLabel}
+          style={{ fontSize: 'clamp(22px, 4.5vw, 32px)', fontWeight: 500 }}
+        >
+          <span className={lang === 'en' ? 'nav__lang-active' : 'nav__lang-inactive'}>EN</span>
+          <span className="nav__lang-sep"> · </span>
+          <span className={lang === 'es' ? 'nav__lang-active' : 'nav__lang-inactive'}>ES</span>
+        </button>
+        <a href="#about" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.about}</a>
+        <a href="#services" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.services}</a>
+        <a href="#editorial" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.laVoz}</a>
+        <button className="mobile-nav__link" onClick={() => { setMenuOpen(false); openModal() }}>{tNav.getInTouch}</button>
+      </div>
       )}
 
       <main>
 
-        {/* HERO */}
-        <section className="hero" id="hero">
-          <div className="hero__chrome-strip hero__chrome-strip--top" aria-hidden="true" />
-          <div className="hero__inner">
-            <div className="hero__mark-row">
-              <div className="hero__sun hero__sun--spin" aria-hidden="true">
-                <svg className="hero__sun-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="22" y="22" width="56" height="56" className="hero__sun-square" />
-                  <rect x="22" y="22" width="56" height="56" className="hero__sun-square" transform="rotate(45 50 50)" />
-                  <circle cx="50" cy="50" r="20" className="hero__sun-core" />
-                </svg>
-              </div>
-              <div className="hero__jxj">
-                <span className="hero__jxj-cell hero__jxj-cell--left"><span className="hero__j">J</span></span>
-                <span className="hero__x">×</span>
-                <span className="hero__jxj-cell hero__jxj-cell--right"><span className="hero__j">J</span></span>
-              </div>
-              <div className="hero__sun hero__sun--spin-reverse" aria-hidden="true">
-                <svg className="hero__sun-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="22" y="22" width="56" height="56" className="hero__sun-square" />
-                  <rect x="22" y="22" width="56" height="56" className="hero__sun-square" transform="rotate(45 50 50)" />
-                  <circle cx="50" cy="50" r="20" className="hero__sun-core" />
-                </svg>
-              </div>
+      {/* HERO */}
+      <section className="hero" id="hero">
+        <div className="hero__chrome-strip hero__chrome-strip--top" aria-hidden="true" />
+        <div className="hero__inner">
+          <div className="hero__mark-row">
+            <div className="hero__sun hero__sun--spin" aria-hidden="true">
+              <svg className="hero__sun-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="22" y="22" width="56" height="56" className="hero__sun-square"/>
+                <rect x="22" y="22" width="56" height="56" className="hero__sun-square" transform="rotate(45 50 50)"/>
+                <circle cx="50" cy="50" r="20" className="hero__sun-core"/>
+              </svg>
             </div>
-            <h1 className="hero__names">Jose &amp; Jocelyn</h1>
-            <p className="hero__tagline" lang="es">El sol sale para todos…</p>
-            <div className="hero__rule" aria-hidden="true" />
-            <p className="hero__foot">
-              <span className="hero__foot-phrase">{t.heroFoot1}</span>
-              <span className="hero__foot-sep" aria-hidden="true"> · </span>
-              <span className="hero__foot-phrase">{t.heroFoot2}</span>
-              <span className="hero__foot-sep" aria-hidden="true"> · </span>
-              <span className="hero__foot-phrase">{t.heroFoot3}</span>
-            </p>
-            {WAITLIST_MODE && (
-              <button
-                type="button"
-                className="hero__waitlist-cta"
-                onClick={openWaitlist}
-                aria-haspopup="dialog"
-                aria-controls="waitlistModal"
-              >
-                <span className="hero__waitlist-cta-label">{tNav.waitlist}</span>
-                <span className="hero__waitlist-cta-arrow" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="13 6 19 12 13 18" />
-                  </svg>
-                </span>
-              </button>
-            )}
+            <div className="hero__jxj">
+              <span className="hero__jxj-cell hero__jxj-cell--left"><span className="hero__j">J</span></span>
+              <span className="hero__x">×</span>
+              <span className="hero__jxj-cell hero__jxj-cell--right"><span className="hero__j">J</span></span>
+            </div>
+            <div className="hero__sun hero__sun--spin-reverse" aria-hidden="true">
+              <svg className="hero__sun-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="22" y="22" width="56" height="56" className="hero__sun-square"/>
+                <rect x="22" y="22" width="56" height="56" className="hero__sun-square" transform="rotate(45 50 50)"/>
+                <circle cx="50" cy="50" r="20" className="hero__sun-core"/>
+              </svg>
+            </div>
           </div>
-          <div className="hero__chrome-strip hero__chrome-strip--bottom" aria-hidden="true" />
-        </section>
-
-        {!WAITLIST_MODE && (<>
-          {/* INTRO */}
-          <section className="intro" id="intro">
-            <div className="intro__left">
-              <div className="intro__banners" role="group" aria-label="From Campus to Career banners">
-                <img src="/images/banner1.png" alt="" className="intro__banner-img" loading="lazy" decoding="async" />
-                <img src="/images/banner2.png" alt="" className="intro__banner-img" loading="lazy" decoding="async" />
-                <img src="/images/banner3.png" alt="" className="intro__banner-img" loading="lazy" decoding="async" />
-                <img src="/images/banner4.png" alt="" className="intro__banner-img" loading="lazy" decoding="async" />
-              </div>
-            </div>
-            <div className="intro__right">
-              <div className="intro__dot" aria-hidden="true" />
-              <p className="intro__text">{t.introText}</p>
-              <img src="/images/sun.png" alt="" className="mascot mascot--sun mascot--intro" aria-hidden="true" loading="lazy" decoding="async" />
-            </div>
-          </section>
-
-          {/* ABOUT */}
-          <section className="about" id="about">
-            <div className="about__header">
-              <h2 className="about__title">{t.aboutTitle}</h2>
-            </div>
-            <div className="about__tabs" role="tablist" onKeyDown={e => {
-              const KEYS = ['who-we-are', 'mission', 'vision']
-              const idx = KEYS.indexOf(aboutTab)
-              let next = null
-              if (e.key === 'ArrowRight') { e.preventDefault(); next = KEYS[(idx + 1) % KEYS.length] }
-              if (e.key === 'ArrowLeft') { e.preventDefault(); next = KEYS[(idx - 1 + KEYS.length) % KEYS.length] }
-              if (e.key === 'Home') { e.preventDefault(); next = KEYS[0] }
-              if (e.key === 'End') { e.preventDefault(); next = KEYS[KEYS.length - 1] }
-              if (next) { setAboutTab(next); setTimeout(() => document.getElementById(`about-tab-${next}`)?.focus(), 0) }
-            }}>
-              {['who-we-are', 'mission', 'vision'].map((tab, i) => (
-                <Fragment key={tab}>
-                  {i > 0 && <span className="about__tab-sep" aria-hidden="true">|</span>}
-                  <button
-                    id={`about-tab-${tab}`}
-                    role="tab"
-                    className={`about__tab${aboutTab === tab ? ' about__tab--active' : ''}`}
-                    aria-selected={aboutTab === tab}
-                    aria-controls={`about-panel-${tab}`}
-                    tabIndex={aboutTab === tab ? 0 : -1}
-                    onClick={() => setAboutTab(tab)}
-                  >
-                    {tab === 'who-we-are' ? t.aboutTabWhoWeAre : tab === 'mission' ? t.aboutTabMission : t.aboutTabVision}
-                  </button>
-                </Fragment>
-              ))}
-            </div>
-
-            <div id="about-panel-who-we-are" role="tabpanel" aria-labelledby="about-tab-who-we-are" className={`about__panel${aboutTab === 'who-we-are' ? ' about__panel--active' : ''}`}>
-              <p className="about__panel-subtitle">{t.aboutSubtitle}</p>
-              <p className="about__intro" dangerouslySetInnerHTML={{ __html: t.aboutIntro }} />
-              <div className="about__cards">
-                <div className="about__card about__card--jose">
-                  <span className="about__card-label">{t.joseLabel}</span>
-                  <div className="about__card-identity">
-                    <div className="about__card-photo-wrap">
-                      <img src="/images/jose.jpeg" alt="Jose G. Cruz-Lopez" className="about__card-photo about__card-photo--base" width="96" height="96" decoding="async" />
-                      <img src="/images/JOSE.png" alt="" className="about__card-photo about__card-photo--alt" width="96" height="96" decoding="async" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <h3 className="about__card-name">{t.joseName}</h3>
-                      <div className="about__card-role-row">
-                        <p className="about__card-role">{t.joseRole}</p>
-                        <div className="about__card-socials">
-                          <a href="https://www.linkedin.com/in/cjxsez/" className="about__card-social about__card-social--linkedin" target="_blank" rel="noopener noreferrer" aria-label="Jose G. Cruz-Lopez on LinkedIn">
-                            <img src="/images/linkedin_logo.png" alt="" decoding="async" loading="lazy" />
-                          </a>
-                          <a href="https://www.instagram.com/cjxsez/" className="about__card-social about__card-social--instagram" target="_blank" rel="noopener noreferrer" aria-label="Jose G. Cruz-Lopez on Instagram">
-                            <img src="/images/instagram_logo.png" alt="" decoding="async" loading="lazy" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="about__card-desc">{t.joseDesc}</p>
-                  <div className="about__card-tags">
-                    {t.joseTags.map((tag) => <span key={tag}>{tag}</span>)}
-                  </div>
-                </div>
-                <div className="about__card about__card--jocelyn">
-                  <span className="about__card-label">{t.jocelynLabel}</span>
-                  <div className="about__card-identity">
-                    <div className="about__card-photo-wrap">
-                      <img src="/images/jocelyn.jpeg" alt="Jocelyn Vazquez" className="about__card-photo about__card-photo--base" width="96" height="96" decoding="async" />
-                      <img src="/images/JOSECELYN.png" alt="" className="about__card-photo about__card-photo--alt" width="96" height="96" decoding="async" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <h3 className="about__card-name">{t.jocelynName}</h3>
-                      <div className="about__card-role-row">
-                        <p className="about__card-role">{t.jocelynRole}</p>
-                        <div className="about__card-socials">
-                          <a href="https://www.linkedin.com/in/jocelyn-vazquez/?skipRedirect=true" className="about__card-social about__card-social--linkedin" target="_blank" rel="noopener noreferrer" aria-label="Jocelyn Vazquez on LinkedIn">
-                            <img src="/images/linkedin_logo.png" alt="" decoding="async" loading="lazy" />
-                          </a>
-                          <a href="https://www.instagram.com/beautyengineered/" className="about__card-social about__card-social--instagram" target="_blank" rel="noopener noreferrer" aria-label="Jocelyn Vazquez on Instagram">
-                            <img src="/images/instagram_logo.png" alt="" decoding="async" loading="lazy" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="about__card-desc">{t.jocelynDesc}</p>
-                  <div className="about__card-tags">
-                    {t.jocelynTags.map((tag) => <span key={tag}>{tag}</span>)}
-                  </div>
-                </div>
-              </div>
-              <p className="about__closing" dangerouslySetInnerHTML={{ __html: t.aboutClosing }} />
-            </div>
-
-            <div id="about-panel-mission" role="tabpanel" aria-labelledby="about-tab-mission" className={`about__panel${aboutTab === 'mission' ? ' about__panel--active' : ''}`}>
-              <p className="about__label">{t.missionLabel}</p>
-              <blockquote className="about__quote" dangerouslySetInnerHTML={{ __html: t.missionQuote }} />
-              <p className="about__attribution">{t.missionAttribution}</p>
-              <p className="about__body">{t.missionBody}</p>
-            </div>
-
-            <div id="about-panel-vision" role="tabpanel" aria-labelledby="about-tab-vision" className={`about__panel${aboutTab === 'vision' ? ' about__panel--active' : ''}`}>
-              <p className="about__body">{t.visionBody}</p>
-            </div>
-          </section>
-
-          {/* CAMPUS TO CAREER */}
-          <section className="c2c" id="c2c">
-            <div className="c2c__inner">
-              <div className="c2c__title-art">
-                <img src="/images/c2c-title-collab.png" alt="From Campus to Career" className="c2c__title-img" loading="lazy" decoding="async" />
-              </div>
-              <div className="c2c__content">
-                <p className="c2c__lead">{t.c2cLead}</p>
-                <ol className="c2c__pipeline">
-                  {t.c2cCards.map(({ n, t: title, d }, idx) => {
-                    const tone = ['navy', 'teal', 'accent', 'gold'][idx]
-                    return (
-                      <li key={n} className={`c2c__node c2c__node--${tone}`}>
-                        <div className="c2c__node-marker" aria-hidden="true">
-                          <span className="c2c__node-dot" />
-                        </div>
-                        <div className="c2c__node-body">
-                          <span className="c2c__node-num">{n}</span>
-                          <h3 className="c2c__node-title">{title}</h3>
-                          <p className="c2c__node-desc">{d}</p>
-                        </div>
-                      </li>
-                    )
-                  })}
-                </ol>
-                <p className="c2c__closing">{t.c2cClosing}</p>
-              </div>
-            </div>
-          </section>
-
-          {/* GALLERY */}
-          <section className="gallery" id="gallery" aria-label="From Campus to Career highlights">
-            <div className="gallery__track" id="galleryTrack" ref={galleryRef}>
-              <div className="gallery__card gallery__card--photo" data-index="0" role="img" aria-label="A degree helps, strategy gets you hired: turn class projects, club work, and jobs into proof of skills" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-degree-strategy.png')" }} />
-              <div className="gallery__card gallery__card--photo" data-index="1" role="img" aria-label="The gap isn't effort, it's access: build access by asking questions and joining career communities" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-gap-access.png')" }} />
-              <div className="gallery__card gallery__card--photo" data-index="2" role="img" aria-label="Your rejection isn't the end: what first-gen students need to hear right now" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-rejection.png')" }} />
-              <div className="gallery__card gallery__card--photo" data-index="3" role="img" aria-label="Some people learn the rules early: study how referrals, networking, and recruiter conversations work" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-learn-the-rules-early.png')" }} />
-              <div className="gallery__card gallery__card--photo" data-index="4" role="img" aria-label="Career clarity should not take years: start small with LinkedIn, resume bullets, and weekly career conversations" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-career-clarity.png')" }} />
-              <div className="gallery__card gallery__card--photo" data-index="5" role="img" aria-label="Students need more than advice: scripts, examples, checklists, and clear next steps" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-students-need-more.png')" }} />
-            </div>
-          </section>
-
-          {/* SERVICES */}
-          <section className="services" id="services">
-            <div className="services__image">
-              <div className="services__image-inner">
-                <div className="services__pattern" aria-hidden="true">
-                  <div className={`pinata ${pinataWrapClass}`} id="pinata" ref={pinataRef} style={{ visibility: pinataVisible ? 'visible' : 'hidden' }}>
-                    <button className="pinata__body" id="pinataBody" aria-label={t.pinataAriaLabel} onClick={handlePinataClick}>
-                      <img src="/pinanta/step1.png" alt="" className="pinata__img" id="pinataImg" ref={pinataImgRef} draggable="false" />
-                    </button>
-                    <p className="pinata__prompt" id="pinataPrompt">{t.pinataPrompt}</p>
-                  </div>
-                  {pinataMsg && <p className="pinata__break-msg" role="status">{pinataMsg}</p>}
-                </div>
-              </div>
-            </div>
-            <div className="services__content">
-              <div className="services__tabs" role="tablist" onKeyDown={e => {
-                const KEYS = ['content', 'sprints', 'community']
-                const idx = KEYS.indexOf(servicesTab)
-                let next = null
-                if (e.key === 'ArrowRight') { e.preventDefault(); next = KEYS[(idx + 1) % KEYS.length] }
-                if (e.key === 'ArrowLeft') { e.preventDefault(); next = KEYS[(idx - 1 + KEYS.length) % KEYS.length] }
-                if (e.key === 'Home') { e.preventDefault(); next = KEYS[0] }
-                if (e.key === 'End') { e.preventDefault(); next = KEYS[KEYS.length - 1] }
-                if (next) { setServicesTab(next); setTimeout(() => document.getElementById(`services-tab-${next}`)?.focus(), 0) }
-              }}>
-                {[['content', t.servicesTabContent], ['sprints', t.servicesTabSprints], ['community', t.servicesTabCommunity]].map(([key, label], i) => (
-                  <Fragment key={key}>
-                    {i > 0 && <span className="services__tab-sep" aria-hidden="true">|</span>}
-                    <button
-                      id={`services-tab-${key}`}
-                      role="tab"
-                      className={`services__tab${servicesTab === key ? ' services__tab--active' : ''}`}
-                      aria-selected={servicesTab === key}
-                      aria-controls={`services-panel-${key}`}
-                      tabIndex={servicesTab === key ? 0 : -1}
-                      onClick={() => setServicesTab(key)}
-                    >
-                      {label}
-                    </button>
-                  </Fragment>
-                ))}
-              </div>
-
-              <div id="services-panel-content" role="tabpanel" aria-labelledby="services-tab-content" className={`services__panel${servicesTab === 'content' ? ' services__panel--active' : ''}`}>
-                <p className="services__body">{t.servicesContentBody}</p>
-                <div className="services__list">
-                  <div className="services__list-col services__list-col--inline">
-                    <Link to="/linkedin-series" className="services__list-btn">{tNav.linkedInSeries} →</Link>
-                    <Link to="/career-templates" className="services__list-btn">{tNav.careerTemplates} →</Link>
-                  </div>
-                </div>
-              </div>
-              <div id="services-panel-sprints" role="tabpanel" aria-labelledby="services-tab-sprints" className={`services__panel${servicesTab === 'sprints' ? ' services__panel--active' : ''}`}>
-                <p className="services__body">{t.servicesSprintsBody}</p>
-                <div className="services__list">
-                  <div className="services__list-col services__list-col--inline">
-                    <span className="services__list-btn services__list-btn--soon" aria-disabled="true">
-                      {tNav.bridgeYearSprint}
-                      <span className="services__list-soon">{t.editorialComingSoon}</span>
-                    </span>
-                    <span className="services__list-btn services__list-btn--soon" aria-disabled="true">
-                      {tNav.interviewPrep}
-                      <span className="services__list-soon">{t.editorialComingSoon}</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div id="services-panel-community" role="tabpanel" aria-labelledby="services-tab-community" className={`services__panel${servicesTab === 'community' ? ' services__panel--active' : ''}`}>
-                <p className="services__body">{t.servicesCommunityBody}</p>
-                <div className="services__list">
-                  <div className="services__list-col services__list-col--grid-2">
-                    <Link to="/opportunity-board" className="services__list-btn">{tNav.opportunityBoard} →</Link>
-                    <Link to="/coffee-chat" className="services__list-btn">{tNav.coffeeChatNetwork} →</Link>
-                    <Link to="/resume-reviews" className="services__list-btn">{tNav.resumeReviews} →</Link>
-                    <span className="services__list-btn services__list-btn--soon" aria-disabled="true">
-                      {tNav.partnerPanels}
-                      <span className="services__list-soon">{t.editorialComingSoon}</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* INTERRUPTION */}
-          <section className="interr">
-            <div className="interr__bars" aria-hidden="true">
-              <div className="interr__bar interr__bar--cream" />
-              <div className="interr__bar interr__bar--accent" />
-            </div>
-            <div className="interr__text">
-              {t.interrLines.map((line, li) => (
-                <span key={li} className="interr__line">
-                  {line.split('').map((char, ci) => (
-                    <span key={ci} className="interr__char">{char}</span>
-                  ))}
-                </span>
-              ))}
-            </div>
-          </section>
-
-          {/* EDITORIAL */}
-          <section className="editorial" id="editorial">
-            <div className="editorial__showcase">
-              <div className="editorial__showcase-inner">
-                <div className="editorial__showcase-content">
-                  <h2 className="editorial__showcase-title">{t.editorialTitle}</h2>
-                  <p className="editorial__showcase-desc">{t.editorialDesc}</p>
-                </div>
-                <img src="/images/moon_2.png" alt="" className="mascot mascot--moon2 mascot--editorial" aria-hidden="true" loading="eager" decoding="async" width="96" height="96" />
-              </div>
-            </div>
-            <div className="editorial__grid">
-              <article className="editorial__card editorial__card--soon">
-                <span className="editorial__card-soon">{t.editorialComingSoon}</span>
-                <div className="editorial__card-tag">{t.card1Tag}</div>
-                <h3 className="editorial__card-title">{t.card1Title}</h3>
-                <p className="editorial__card-excerpt">{t.card1Excerpt}</p>
-              </article>
-              <article className="editorial__card editorial__card--dark editorial__card--soon">
-                <span className="editorial__card-soon">{t.editorialComingSoon}</span>
-                <div className="editorial__card-tag">{t.card2Tag}</div>
-                <h3 className="editorial__card-title">{t.card2Title}</h3>
-                <p className="editorial__card-excerpt">{t.card2Excerpt}</p>
-              </article>
-            </div>
-            <div className="editorial__grid">
-              <article className="editorial__card editorial__card--dark editorial__card--soon">
-                <span className="editorial__card-soon">{t.editorialComingSoon}</span>
-                <div className="editorial__card-tag">{t.card3Tag}</div>
-                <h3 className="editorial__card-title">{t.card3Title}</h3>
-                <p className="editorial__card-excerpt">{t.card3Excerpt}</p>
-              </article>
-              <article className="editorial__card editorial__card--soon">
-                <span className="editorial__card-soon">{t.editorialComingSoon}</span>
-                <div className="editorial__card-tag">{t.card4Tag}</div>
-                <h3 className="editorial__card-title">{t.card4Title}</h3>
-                <p className="editorial__card-excerpt">{t.card4Excerpt}</p>
-              </article>
-            </div>
-            <div className="editorial__grid">
-              <article className="editorial__card editorial__card--soon">
-                <span className="editorial__card-soon">{t.editorialComingSoon}</span>
-                <div className="editorial__card-tag">{t.card5Tag}</div>
-                <h3 className="editorial__card-title">{t.card5Title}</h3>
-                <p className="editorial__card-excerpt">{t.card5Excerpt}</p>
-              </article>
-              <article className="editorial__card editorial__card--dark editorial__card--soon">
-                <span className="editorial__card-soon">{t.editorialComingSoon}</span>
-                <div className="editorial__card-tag">{t.card6Tag}</div>
-                <h3 className="editorial__card-title">{t.card6Title}</h3>
-                <p className="editorial__card-excerpt">{t.card6Excerpt}</p>
-              </article>
-            </div>
-            <div className="editorial__more">
-              <button type="button" className="editorial__more-btn" onClick={openNewsletter} aria-haspopup="dialog" aria-controls="newsletterModal">
-                {t.editorialNotify}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          <h1 className="hero__names">Jose &amp; Jocelyn</h1>
+          <p className="hero__tagline" lang="es">El sol sale para todos…</p>
+          <div className="hero__rule" aria-hidden="true" />
+          <p className="hero__foot">
+            <span className="hero__foot-phrase">{t.heroFoot1}</span>
+            <span className="hero__foot-sep" aria-hidden="true"> · </span>
+            <span className="hero__foot-phrase">{t.heroFoot2}</span>
+            <span className="hero__foot-sep" aria-hidden="true"> · </span>
+            <span className="hero__foot-phrase">{t.heroFoot3}</span>
+          </p>
+          {WAITLIST_MODE && (
+            <button
+              type="button"
+              className="hero__waitlist-cta"
+              onClick={openWaitlist}
+              aria-haspopup="dialog"
+              aria-controls="waitlistModal"
+            >
+              <span className="hero__waitlist-cta-label">{tNav.waitlist}</span>
+              <span className="hero__waitlist-cta-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="13 6 19 12 13 18" />
                 </svg>
+              </span>
+            </button>
+          )}
+        </div>
+        <div className="hero__chrome-strip hero__chrome-strip--bottom" aria-hidden="true" />
+      </section>
+
+      {!WAITLIST_MODE && (<>
+      {/* INTRO */}
+      <section className="intro" id="intro">
+        <div className="intro__left">
+          <div className="intro__banners" role="group" aria-label="From Campus to Career banners">
+            <img src="/images/banner1.png" alt="" className="intro__banner-img" loading="lazy" decoding="async" />
+            <img src="/images/banner2.png" alt="" className="intro__banner-img" loading="lazy" decoding="async" />
+            <img src="/images/banner3.png" alt="" className="intro__banner-img" loading="lazy" decoding="async" />
+            <img src="/images/banner4.png" alt="" className="intro__banner-img" loading="lazy" decoding="async" />
+          </div>
+        </div>
+        <div className="intro__right">
+          <div className="intro__dot" aria-hidden="true" />
+          <p className="intro__text">{t.introText}</p>
+          <img src="/images/sun.png" alt="" className="mascot mascot--sun mascot--intro" aria-hidden="true" loading="lazy" decoding="async" />
+        </div>
+      </section>
+
+      {/* ABOUT */}
+      <section className="about" id="about">
+        <div className="about__header">
+          <h2 className="about__title">{t.aboutTitle}</h2>
+        </div>
+        <div className="about__tabs" role="tablist" onKeyDown={e => {
+          const KEYS = ['who-we-are', 'mission', 'vision']
+          const idx = KEYS.indexOf(aboutTab)
+          let next = null
+          if (e.key === 'ArrowRight') { e.preventDefault(); next = KEYS[(idx + 1) % KEYS.length] }
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); next = KEYS[(idx - 1 + KEYS.length) % KEYS.length] }
+          if (e.key === 'Home')       { e.preventDefault(); next = KEYS[0] }
+          if (e.key === 'End')        { e.preventDefault(); next = KEYS[KEYS.length - 1] }
+          if (next) { setAboutTab(next); setTimeout(() => document.getElementById(`about-tab-${next}`)?.focus(), 0) }
+        }}>
+          {['who-we-are', 'mission', 'vision'].map((tab, i) => (
+            <Fragment key={tab}>
+              {i > 0 && <span className="about__tab-sep" aria-hidden="true">|</span>}
+              <button
+                id={`about-tab-${tab}`}
+                role="tab"
+                className={`about__tab${aboutTab === tab ? ' about__tab--active' : ''}`}
+                aria-selected={aboutTab === tab}
+                aria-controls={`about-panel-${tab}`}
+                tabIndex={aboutTab === tab ? 0 : -1}
+                onClick={() => setAboutTab(tab)}
+              >
+                {tab === 'who-we-are' ? t.aboutTabWhoWeAre : tab === 'mission' ? t.aboutTabMission : t.aboutTabVision}
               </button>
+            </Fragment>
+          ))}
+        </div>
+
+        <div id="about-panel-who-we-are" role="tabpanel" aria-labelledby="about-tab-who-we-are" className={`about__panel${aboutTab === 'who-we-are' ? ' about__panel--active' : ''}`}>
+          <p className="about__panel-subtitle">{t.aboutSubtitle}</p>
+          <p className="about__intro" dangerouslySetInnerHTML={{ __html: t.aboutIntro }} />
+          <div className="about__cards">
+            <div className="about__card about__card--jose">
+              <span className="about__card-label">{t.joseLabel}</span>
+              <div className="about__card-identity">
+                <div className="about__card-photo-wrap">
+                  <img src="/images/jose.jpeg" alt="Jose G. Cruz-Lopez" className="about__card-photo about__card-photo--base" width="96" height="96" decoding="async" />
+                  <img src="/images/JOSE.png" alt="" className="about__card-photo about__card-photo--alt" width="96" height="96" decoding="async" aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="about__card-name">{t.joseName}</h3>
+                  <div className="about__card-role-row">
+                    <p className="about__card-role">{t.joseRole}</p>
+                    <div className="about__card-socials">
+                      <a href="https://www.linkedin.com/in/cjxsez/" className="about__card-social about__card-social--linkedin" target="_blank" rel="noopener noreferrer" aria-label="Jose G. Cruz-Lopez on LinkedIn">
+                        <img src="/images/linkedin_logo.png" alt="" decoding="async" loading="lazy" />
+                      </a>
+                      <a href="https://www.instagram.com/cjxsez/" className="about__card-social about__card-social--instagram" target="_blank" rel="noopener noreferrer" aria-label="Jose G. Cruz-Lopez on Instagram">
+                        <img src="/images/instagram_logo.png" alt="" decoding="async" loading="lazy" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p className="about__card-desc">{t.joseDesc}</p>
+              <div className="about__card-tags">
+                {t.joseTags.map((tag) => <span key={tag}>{tag}</span>)}
+              </div>
             </div>
-          </section>
-        </>)}
+            <div className="about__card about__card--jocelyn">
+              <span className="about__card-label">{t.jocelynLabel}</span>
+              <div className="about__card-identity">
+                <div className="about__card-photo-wrap">
+                  <img src="/images/jocelyn.jpeg" alt="Jocelyn Vazquez" className="about__card-photo about__card-photo--base" width="96" height="96" decoding="async" />
+                  <img src="/images/JOSECELYN.png" alt="" className="about__card-photo about__card-photo--alt" width="96" height="96" decoding="async" aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="about__card-name">{t.jocelynName}</h3>
+                  <div className="about__card-role-row">
+                    <p className="about__card-role">{t.jocelynRole}</p>
+                    <div className="about__card-socials">
+                      <a href="https://www.linkedin.com/in/jocelyn-vazquez/?skipRedirect=true" className="about__card-social about__card-social--linkedin" target="_blank" rel="noopener noreferrer" aria-label="Jocelyn Vazquez on LinkedIn">
+                        <img src="/images/linkedin_logo.png" alt="" decoding="async" loading="lazy" />
+                      </a>
+                      <a href="https://www.instagram.com/beautyengineered/" className="about__card-social about__card-social--instagram" target="_blank" rel="noopener noreferrer" aria-label="Jocelyn Vazquez on Instagram">
+                        <img src="/images/instagram_logo.png" alt="" decoding="async" loading="lazy" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p className="about__card-desc">{t.jocelynDesc}</p>
+              <div className="about__card-tags">
+                {t.jocelynTags.map((tag) => <span key={tag}>{tag}</span>)}
+              </div>
+            </div>
+          </div>
+          <p className="about__closing" dangerouslySetInnerHTML={{ __html: t.aboutClosing }} />
+        </div>
+
+        <div id="about-panel-mission" role="tabpanel" aria-labelledby="about-tab-mission" className={`about__panel${aboutTab === 'mission' ? ' about__panel--active' : ''}`}>
+          <p className="about__label">{t.missionLabel}</p>
+          <blockquote className="about__quote" dangerouslySetInnerHTML={{ __html: t.missionQuote }} />
+          <p className="about__attribution">{t.missionAttribution}</p>
+          <p className="about__body">{t.missionBody}</p>
+        </div>
+
+        <div id="about-panel-vision" role="tabpanel" aria-labelledby="about-tab-vision" className={`about__panel${aboutTab === 'vision' ? ' about__panel--active' : ''}`}>
+          <p className="about__body">{t.visionBody}</p>
+        </div>
+      </section>
+
+      {/* CAMPUS TO CAREER */}
+      <section className="c2c" id="c2c">
+        <div className="c2c__inner">
+          <div className="c2c__title-art">
+            <img src="/images/c2c-title-collab.png" alt="From Campus to Career" className="c2c__title-img" loading="lazy" decoding="async" />
+          </div>
+          <div className="c2c__content">
+            <p className="c2c__lead">{t.c2cLead}</p>
+            <ol className="c2c__pipeline">
+              {t.c2cCards.map(({ n, t: title, d }, idx) => {
+                const tone = ['navy', 'teal', 'accent', 'gold'][idx]
+                return (
+                  <li key={n} className={`c2c__node c2c__node--${tone}`}>
+                    <div className="c2c__node-marker" aria-hidden="true">
+                      <span className="c2c__node-dot" />
+                    </div>
+                    <div className="c2c__node-body">
+                      <span className="c2c__node-num">{n}</span>
+                      <h3 className="c2c__node-title">{title}</h3>
+                      <p className="c2c__node-desc">{d}</p>
+                    </div>
+                  </li>
+                )
+              })}
+            </ol>
+            <p className="c2c__closing">{t.c2cClosing}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* GALLERY */}
+      <section className="gallery" id="gallery" aria-label="From Campus to Career highlights">
+        <div className="gallery__track" id="galleryTrack" ref={galleryRef}>
+          <div className="gallery__card gallery__card--photo" data-index="0" role="img" aria-label="A degree helps, strategy gets you hired: turn class projects, club work, and jobs into proof of skills" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-degree-strategy.png')" }} />
+          <div className="gallery__card gallery__card--photo" data-index="1" role="img" aria-label="The gap isn't effort, it's access: build access by asking questions and joining career communities" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-gap-access.png')" }} />
+          <div className="gallery__card gallery__card--photo" data-index="2" role="img" aria-label="Your rejection isn't the end: what first-gen students need to hear right now" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-rejection.png')" }} />
+          <div className="gallery__card gallery__card--photo" data-index="3" role="img" aria-label="Some people learn the rules early: study how referrals, networking, and recruiter conversations work" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-learn-the-rules-early.png')" }} />
+          <div className="gallery__card gallery__card--photo" data-index="4" role="img" aria-label="Career clarity should not take years: start small with LinkedIn, resume bullets, and weekly career conversations" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-career-clarity.png')" }} />
+          <div className="gallery__card gallery__card--photo" data-index="5" role="img" aria-label="Students need more than advice: scripts, examples, checklists, and clear next steps" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-students-need-more.png')" }} />
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section className="services" id="services">
+        <div className="services__image">
+          <div className="services__image-inner">
+            <div className="services__pattern" aria-hidden="true">
+              <div className={`pinata ${pinataWrapClass}`} id="pinata" ref={pinataRef} style={{ visibility: pinataVisible ? 'visible' : 'hidden' }}>
+                <button className="pinata__body" id="pinataBody" aria-label={t.pinataAriaLabel} onClick={handlePinataClick}>
+                  <img src="/pinanta/step1.png" alt="" className="pinata__img" id="pinataImg" ref={pinataImgRef} draggable="false" />
+                </button>
+                <p className="pinata__prompt" id="pinataPrompt">{t.pinataPrompt}</p>
+              </div>
+              {pinataMsg && <p className="pinata__break-msg" role="status">{pinataMsg}</p>}
+            </div>
+          </div>
+        </div>
+        <div className="services__content">
+          <div className="services__tabs" role="tablist" onKeyDown={e => {
+            const KEYS = ['content', 'sprints', 'community']
+            const idx = KEYS.indexOf(servicesTab)
+            let next = null
+            if (e.key === 'ArrowRight') { e.preventDefault(); next = KEYS[(idx + 1) % KEYS.length] }
+            if (e.key === 'ArrowLeft')  { e.preventDefault(); next = KEYS[(idx - 1 + KEYS.length) % KEYS.length] }
+            if (e.key === 'Home')       { e.preventDefault(); next = KEYS[0] }
+            if (e.key === 'End')        { e.preventDefault(); next = KEYS[KEYS.length - 1] }
+            if (next) { setServicesTab(next); setTimeout(() => document.getElementById(`services-tab-${next}`)?.focus(), 0) }
+          }}>
+            {[['content', t.servicesTabContent], ['sprints', t.servicesTabSprints], ['community', t.servicesTabCommunity]].map(([key, label], i) => (
+              <Fragment key={key}>
+                {i > 0 && <span className="services__tab-sep" aria-hidden="true">|</span>}
+                <button
+                  id={`services-tab-${key}`}
+                  role="tab"
+                  className={`services__tab${servicesTab === key ? ' services__tab--active' : ''}`}
+                  aria-selected={servicesTab === key}
+                  aria-controls={`services-panel-${key}`}
+                  tabIndex={servicesTab === key ? 0 : -1}
+                  onClick={() => setServicesTab(key)}
+                >
+                  {label}
+                </button>
+              </Fragment>
+            ))}
+          </div>
+
+          <div id="services-panel-content" role="tabpanel" aria-labelledby="services-tab-content" className={`services__panel${servicesTab === 'content' ? ' services__panel--active' : ''}`}>
+            <p className="services__body">{t.servicesContentBody}</p>
+            <div className="services__list">
+              <div className="services__list-col services__list-col--inline">
+                <Link to="/linkedin-series" className="services__list-btn">{tNav.linkedInSeries} →</Link>
+                <Link to="/career-templates" className="services__list-btn">{tNav.careerTemplates} →</Link>
+              </div>
+            </div>
+          </div>
+          <div id="services-panel-sprints" role="tabpanel" aria-labelledby="services-tab-sprints" className={`services__panel${servicesTab === 'sprints' ? ' services__panel--active' : ''}`}>
+            <p className="services__body">{t.servicesSprintsBody}</p>
+            <div className="services__list">
+              <div className="services__list-col services__list-col--inline">
+                <span className="services__list-btn services__list-btn--soon" aria-disabled="true">
+                  {tNav.bridgeYearSprint}
+                  <span className="services__list-soon">{t.editorialComingSoon}</span>
+                </span>
+                <span className="services__list-btn services__list-btn--soon" aria-disabled="true">
+                  {tNav.interviewPrep}
+                  <span className="services__list-soon">{t.editorialComingSoon}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div id="services-panel-community" role="tabpanel" aria-labelledby="services-tab-community" className={`services__panel${servicesTab === 'community' ? ' services__panel--active' : ''}`}>
+            <p className="services__body">{t.servicesCommunityBody}</p>
+            <div className="services__list">
+              <div className="services__list-col services__list-col--grid-2">
+                <Link to="/opportunity-board" className="services__list-btn">{tNav.opportunityBoard} →</Link>
+                <Link to="/coffee-chat" className="services__list-btn">{tNav.coffeeChatNetwork} →</Link>
+                <Link to="/resume-reviews" className="services__list-btn">{tNav.resumeReviews} →</Link>
+                <span className="services__list-btn services__list-btn--soon" aria-disabled="true">
+                  {tNav.partnerPanels}
+                  <span className="services__list-soon">{t.editorialComingSoon}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* INTERRUPTION */}
+      <section className="interr">
+        <div className="interr__bars" aria-hidden="true">
+          <div className="interr__bar interr__bar--cream" />
+          <div className="interr__bar interr__bar--accent" />
+        </div>
+        <div className="interr__text">
+          {t.interrLines.map((line, li) => (
+            <span key={li} className="interr__line">
+              {line.split('').map((char, ci) => (
+                <span key={ci} className="interr__char">{char}</span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* EDITORIAL */}
+      <section className="editorial" id="editorial">
+        <div className="editorial__showcase">
+          <div className="editorial__showcase-inner">
+            <div className="editorial__showcase-content">
+              <h2 className="editorial__showcase-title">{t.editorialTitle}</h2>
+              <p className="editorial__showcase-desc">{t.editorialDesc}</p>
+            </div>
+            <img src="/images/moon_2.png" alt="" className="mascot mascot--moon2 mascot--editorial" aria-hidden="true" loading="eager" decoding="async" width="96" height="96" />
+          </div>
+        </div>
+        <div className="editorial__grid">
+          <article className="editorial__card editorial__card--soon">
+            <span className="editorial__card-soon">{t.editorialComingSoon}</span>
+            <div className="editorial__card-tag">{t.card1Tag}</div>
+            <h3 className="editorial__card-title">{t.card1Title}</h3>
+            <p className="editorial__card-excerpt">{t.card1Excerpt}</p>
+          </article>
+          <article className="editorial__card editorial__card--dark editorial__card--soon">
+            <span className="editorial__card-soon">{t.editorialComingSoon}</span>
+            <div className="editorial__card-tag">{t.card2Tag}</div>
+            <h3 className="editorial__card-title">{t.card2Title}</h3>
+            <p className="editorial__card-excerpt">{t.card2Excerpt}</p>
+          </article>
+        </div>
+        <div className="editorial__grid">
+          <article className="editorial__card editorial__card--dark editorial__card--soon">
+            <span className="editorial__card-soon">{t.editorialComingSoon}</span>
+            <div className="editorial__card-tag">{t.card3Tag}</div>
+            <h3 className="editorial__card-title">{t.card3Title}</h3>
+            <p className="editorial__card-excerpt">{t.card3Excerpt}</p>
+          </article>
+          <article className="editorial__card editorial__card--soon">
+            <span className="editorial__card-soon">{t.editorialComingSoon}</span>
+            <div className="editorial__card-tag">{t.card4Tag}</div>
+            <h3 className="editorial__card-title">{t.card4Title}</h3>
+            <p className="editorial__card-excerpt">{t.card4Excerpt}</p>
+          </article>
+        </div>
+        <div className="editorial__grid">
+          <article className="editorial__card editorial__card--soon">
+            <span className="editorial__card-soon">{t.editorialComingSoon}</span>
+            <div className="editorial__card-tag">{t.card5Tag}</div>
+            <h3 className="editorial__card-title">{t.card5Title}</h3>
+            <p className="editorial__card-excerpt">{t.card5Excerpt}</p>
+          </article>
+          <article className="editorial__card editorial__card--dark editorial__card--soon">
+            <span className="editorial__card-soon">{t.editorialComingSoon}</span>
+            <div className="editorial__card-tag">{t.card6Tag}</div>
+            <h3 className="editorial__card-title">{t.card6Title}</h3>
+            <p className="editorial__card-excerpt">{t.card6Excerpt}</p>
+          </article>
+        </div>
+        <div className="editorial__more">
+          <button type="button" className="editorial__more-btn" onClick={openNewsletter} aria-haspopup="dialog" aria-controls="newsletterModal">
+            {t.editorialNotify}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </button>
+        </div>
+      </section>
+      </>)}
 
       </main>
 
       {!WAITLIST_MODE && (<>
-        {/* FOOTER */}
-        <footer className="footer" id="contact" ref={footerRef}>
-          <canvas className="footer__dots-canvas" aria-hidden="true" ref={canvasRef} />
-          <div className="footer__logo">
-            <svg viewBox="0 0 560 400" className="footer__logo-svg" aria-label="Jose x Jocelyn">
-              <text x="0" y="320" className="footer__logo-text">J</text>
-              <text x="280" y="320" className="footer__logo-text">J</text>
-              <rect x="40" y="42" width="112" height="27" rx="3" transform="rotate(-18 96 55)" fill="#E8A838" />
-              <rect x="315" y="42" width="112" height="27" rx="3" transform="rotate(-18 371 55)" fill="#E8A838" />
-              <text x="190" y="252" className="footer__logo-x">x</text>
-            </svg>
-          </div>
-          <button className="footer__cta" id="footerCta" onClick={openModal}>
-            <span className="footer__cta-text" dangerouslySetInnerHTML={{ __html: t.footerCta }} />
-          </button>
-          <p className="footer__signoff" lang="es">{t.footerSignoff}</p>
-          <div className="footer__bottom">
-            <span className="footer__credit">{t.footerCredit}</span>
-            <Link to="/privacy" className="footer__credit" style={{ marginLeft: '1.25rem', textDecoration: 'underline', textUnderlineOffset: '2px' }}>{t.footerPrivacy}</Link>
-          </div>
-        </footer>
+      {/* FOOTER */}
+      <footer className="footer" id="contact" ref={footerRef}>
+        <canvas className="footer__dots-canvas" aria-hidden="true" ref={canvasRef} />
+        <div className="footer__logo">
+          <svg viewBox="0 0 560 400" className="footer__logo-svg" aria-label="Jose x Jocelyn">
+            <text x="0" y="320" className="footer__logo-text">J</text>
+            <text x="280" y="320" className="footer__logo-text">J</text>
+            <rect x="40" y="42" width="112" height="27" rx="3" transform="rotate(-18 96 55)" fill="#E8A838" />
+            <rect x="315" y="42" width="112" height="27" rx="3" transform="rotate(-18 371 55)" fill="#E8A838" />
+            <text x="190" y="252" className="footer__logo-x">x</text>
+          </svg>
+        </div>
+        <button className="footer__cta" id="footerCta" onClick={openModal}>
+          <span className="footer__cta-text" dangerouslySetInnerHTML={{ __html: t.footerCta }} />
+        </button>
+        <p className="footer__signoff" lang="es">{t.footerSignoff}</p>
+        <div className="footer__bottom">
+          <span className="footer__credit">{t.footerCredit}</span>
+          <Link to="/privacy" className="footer__credit" style={{ marginLeft: '1.25rem', textDecoration: 'underline', textUnderlineOffset: '2px' }}>{t.footerPrivacy}</Link>
+        </div>
+      </footer>
       </>)}
 
       {/* CONTACT MODAL */}
@@ -1457,7 +1414,7 @@ export default function Home() {
         <div className="modal__box" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef} onKeyDown={handleModalKeyDown}>
           <button className="modal__close" id="modalClose" onClick={closeModal} aria-label={t.modalClose}>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
-              <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
             </svg>
           </button>
           {!modalSent ? (
@@ -1477,15 +1434,10 @@ export default function Home() {
                 <textarea id="modalMessage" className="modal__input modal__textarea" placeholder={t.modalMessagePlaceholder} value={modalMessage} onChange={e => setModalMessage(e.target.value)} rows={4} />
               </div>
               {modalError && <p role="alert" className="modal__error">{modalError}</p>}
-              {turnstileErrorContact && <p role="alert" className="form-error-turnstile">{t.forms.errorTurnstile}</p>}
-              <Turnstile
-                onToken={setModalToken}
-                onError={() => setTurnstileErrorContact(true)}
-                resetRef={modalTurnstileReset}
-                className="modal__turnstile"
-              />
+              {modalTurnstileError && <p role="alert" className="form-error-turnstile">{tForms.errorTurnstile}</p>}
+              <Turnstile onToken={setModalToken} onError={() => setModalTurnstileError(true)} resetRef={modalTurnstileReset} className="modal__turnstile" />
               <div className="modal__footer">
-                <button className="modal__btn" disabled={modalLoading || !modalEmail.trim() || !modalMessage.trim() || turnstileErrorContact || (TURNSTILE_ENABLED && !modalToken)} onClick={handleModalSubmit}>
+                <button className="modal__btn" disabled={modalLoading || !modalEmail.trim() || !modalMessage.trim() || modalTurnstileError || (TURNSTILE_ENABLED && !modalToken)} onClick={handleModalSubmit}>
                   {modalLoading ? t.modalSending : t.modalSend}
                 </button>
                 <span className="modal__reassurance">{t.modalReassurance}</span>
@@ -1509,7 +1461,7 @@ export default function Home() {
         <div className="modal__box" role="dialog" aria-modal="true" aria-labelledby="waitlist-title" ref={waitlistRef} onKeyDown={handleWaitlistKeyDown}>
           <button className="modal__close" onClick={closeWaitlist} aria-label={t.modalClose}>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
-              <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
             </svg>
           </button>
           {!waitlistSent ? (
@@ -1529,15 +1481,10 @@ export default function Home() {
                 <input type="text" id="waitlistSchool" className="modal__input" placeholder={t.waitlistSchoolPlaceholder} value={waitlistSchool} onChange={e => setWaitlistSchool(e.target.value)} />
               </div>
               {waitlistError && <p role="alert" className="modal__error">{waitlistError}</p>}
-              {turnstileErrorWaitlist && <p role="alert" className="form-error-turnstile">{t.forms.errorTurnstile}</p>}
-              <Turnstile
-                onToken={setWaitlistToken}
-                onError={() => setTurnstileErrorWaitlist(true)}
-                resetRef={waitlistTurnstileReset}
-                className="modal__turnstile"
-              />
+              {waitlistTurnstileError && <p role="alert" className="form-error-turnstile">{tForms.errorTurnstile}</p>}
+              <Turnstile onToken={setWaitlistToken} onError={() => setWaitlistTurnstileError(true)} resetRef={waitlistTurnstileReset} className="modal__turnstile" />
               <div className="modal__footer">
-                <button className="modal__btn" disabled={waitlistLoading || !waitlistName.trim() || !waitlistEmail.trim() || turnstileErrorWaitlist || (TURNSTILE_ENABLED && !waitlistToken)} onClick={handleWaitlistSubmit}>
+                <button className="modal__btn" disabled={waitlistLoading || !waitlistName.trim() || !waitlistEmail.trim() || waitlistTurnstileError || (TURNSTILE_ENABLED && !waitlistToken)} onClick={handleWaitlistSubmit}>
                   {waitlistLoading ? t.waitlistSubmitting : t.waitlistSubmit}
                 </button>
                 <span className="modal__reassurance">{t.waitlistReassurance}</span>
@@ -1570,7 +1517,7 @@ export default function Home() {
         <div className="modal__box" role="dialog" aria-modal="true" aria-labelledby="newsletter-title" ref={newsletterRef} onKeyDown={handleNewsletterKeyDown}>
           <button className="modal__close" onClick={closeNewsletter} aria-label={t.modalClose}>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
-              <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
             </svg>
           </button>
           {!newsletterSent ? (
@@ -1591,15 +1538,10 @@ export default function Home() {
                 />
               </div>
               {newsletterError && <p role="alert" className="modal__error">{newsletterError}</p>}
-              {turnstileErrorNewsletter && <p role="alert" className="form-error-turnstile">{t.forms.errorTurnstile}</p>}
-              <Turnstile
-                onToken={setNewsletterToken}
-                onError={() => setTurnstileErrorNewsletter(true)}
-                resetRef={newsletterTurnstileReset}
-                className="modal__turnstile"
-              />
+              {newsletterTurnstileError && <p role="alert" className="form-error-turnstile">{tForms.errorTurnstile}</p>}
+              <Turnstile onToken={setNewsletterToken} onError={() => setNewsletterTurnstileError(true)} resetRef={newsletterTurnstileReset} className="modal__turnstile" />
               <div className="modal__footer">
-                <button className="modal__btn" disabled={newsletterLoading || !newsletterEmail.trim() || turnstileErrorNewsletter || (TURNSTILE_ENABLED && !newsletterToken)} onClick={handleNewsletterSubmit}>
+                <button className="modal__btn" disabled={newsletterLoading || !newsletterEmail.trim() || newsletterTurnstileError || (TURNSTILE_ENABLED && !newsletterToken)} onClick={handleNewsletterSubmit}>
                   {newsletterLoading ? t.newsletterSubmitting : t.newsletterSubmit}
                 </button>
                 <span className="modal__reassurance">{t.newsletterReassurance}</span>
@@ -1618,4 +1560,3 @@ export default function Home() {
     </>
   )
 }
-

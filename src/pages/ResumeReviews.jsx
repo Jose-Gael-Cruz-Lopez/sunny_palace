@@ -240,6 +240,7 @@ function CompaniesPanel({ companies, onToggle, t }) {
 export default function ResumeReviews() {
   const GATED_ROUTES = ['/bridge-year', '/interview-prep', '/partner-panels']
   const t = useT('resumeReviews')
+  const tForms = useT('forms')
   const [dbResumes, setDbResumes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter] = useState({ search: '', roles: [], stages: [], companies: [], tags: [], sort: 'newest' })
@@ -254,10 +255,6 @@ export default function ResumeReviews() {
   const [turnstileError, setTurnstileError] = useState(false)
   const turnstileReset = useRef(null)
 
-  // A token means the widget recovered (e.g. the visitor turned off their blocker).
-  useEffect(() => {
-    if (turnstileToken) setTurnstileError(false)
-  }, [turnstileToken])
   const [submitForm, setSubmitForm] = useState({ handle: '', email: '', linkedin: '', roleTitle: '', roleType: '', roleTypeOther: '', stage: '', stageOther: '', companies: '', bgTags: [], bgOther: '', download: 'no', story: '', annotate: 'no' })
   const [fileName, setFileName] = useState('')
   const [avatarFile, setAvatarFile] = useState(null)
@@ -1266,14 +1263,14 @@ export default function ResumeReviews() {
                   </div>
                 </div>
                 {submitError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{submitError}</p>}
-                {turnstileError && <p role="alert" className="form-error-turnstile">{t.forms.errorTurnstile}</p>}
+                {turnstileError && <p role="alert" className="form-error-turnstile">{tForms.errorTurnstile}</p>}
                 <Turnstile
                   className="rr-form-turnstile"
                   onToken={setTurnstileToken}
                   onError={() => setTurnstileError(true)}
                   resetRef={turnstileReset}
                 />
-                <button className="rr-form-btn" type="submit" disabled={formLoading || turnstileError || (TURNSTILE_ENABLED && !turnstileToken)}>{submitLoading ? t.formSubmitting : t.formSubmit}</button>
+                <button className="rr-form-btn" type="submit" disabled={submitLoading || turnstileError || (TURNSTILE_ENABLED && !turnstileToken)}>{submitLoading ? t.formSubmitting : t.formSubmit}</button>
                 <p className="rr-form-note">{t.formNote}</p>
               </form>
             )}

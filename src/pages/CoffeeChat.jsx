@@ -174,6 +174,7 @@ function dbProfileToCard(row) {
 export default function CoffeeChat() {
   const GATED_ROUTES = ['/bridge-year', '/interview-prep', '/partner-panels']
   const t = useT('coffeeChat')
+  const tForms = useT('forms')
   const [searchParams, setSearchParams] = useSearchParams()
   const filterRole = searchParams.get('role') || ''
   const filterFunc = searchParams.get('func') || ''
@@ -298,11 +299,6 @@ export default function CoffeeChat() {
     }
   }, [modalOpen])
 
-  useEffect(() => {
-    if (turnstileToken) {
-      setTurnstileError(false)
-    }
-  }, [turnstileToken])
 
   const visibleProfiles = dbProfiles.filter(p => {
     const q = search.toLowerCase().trim()
@@ -1209,7 +1205,7 @@ export default function CoffeeChat() {
                     <button type="submit" className="cc-form-error-card__retry" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formRetryLabel}</button>
                   </div>
                 )}
-                {turnstileError && <p role="alert" className="form-error-turnstile">{t.forms.errorTurnstile}</p>}
+                {turnstileError && <p role="alert" className="form-error-turnstile">{tForms.errorTurnstile}</p>}
                 <Turnstile
                   className="cc-form-turnstile"
                   onToken={setTurnstileToken}
@@ -1274,4 +1270,3 @@ export default function CoffeeChat() {
     </ArticleLayout>
   )
 }
-

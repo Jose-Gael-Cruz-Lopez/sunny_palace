@@ -59,10 +59,6 @@ export default function Turnstile({ onToken, onError, resetRef, className }) {
   const handleClear = useCallback(() => { onToken?.('') }, [onToken])
 
   useEffect(() => {
-    onErrorRef.current = onError
-  }, [onError])
-
-  useEffect(() => {
     // No site key configured → no-op (local dev / build without the var).
     if (!SITE_KEY) return
     let cancelled = false
