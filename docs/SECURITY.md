@@ -14,7 +14,7 @@ together, and the ongoing responsibilities required to keep it secure.
 ## 1. Architecture & trust model
 
 - **Frontend:** React 18 + Vite 5 single-page app, built to `dist/` and served on
-  **Cloudflare Pages**. No server-side rendering; all logic the browser runs is public.
+  **Vercel**. No server-side rendering; all logic the browser runs is public.
 - **Backend:** a single **Supabase** project (Postgres 17, ref `kdkeerhukydxwoycjuwl`).
   The browser talks **directly** to Supabase with the **publishable / anon key**, which is
   *designed to be public* and is governed by **Row-Level Security (RLS)** and table/column
@@ -164,12 +164,16 @@ error stays in `console.error` only. Known cases map to safe messages (duplicate
 ### HIGH-6 — Missing security headers / CSP  *(measure #46)*
 **Risk:** no `Content-Security-Policy`, `HSTS`, `X-Frame-Options`, etc. — open to
 clickjacking, MIME-sniffing, and no defense-in-depth against XSS.
-**Fix:** `public/_headers` (Cloudflare Pages) and a mirrored `vercel.json` set
-`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`, a 2-year
-`Strict-Transport-Security` (preload), `Permissions-Policy`, and a strict **CSP** scoped to
-exactly what the app loads (self, Cloudflare Turnstile, Fontshare/Google Fonts,
-`*.supabase.co`, `cdn.simpleicons.org`, `data:`/`blob:`). No `unsafe-eval`, no wildcard
-`script-src`, no dead Gemini origin.
+**Fix:** `vercel.json` sets `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`,
+`Referrer-Policy`, a 2-year `Strict-Transport-Security` (preload), `Permissions-Policy`,
+and a strict **CSP** scoped to exactly what the app loads (self, Cloudflare Turnstile,
+Fontshare/Google Fonts, `*.supabase.co`, `cdn.simpleicons.org`, `data:`/`blob:`). No
+`unsafe-eval`, no wildcard `script-src`, no dead Gemini origin.
+
+> `public/_headers` is a leftover Cloudflare Pages config file from before the move to
+> Vercel. It is **not read by Vercel** and has no effect on the live site — `vercel.json`
+> is the only config that matters now. It's kept in the repo only as a historical
+> reference; do not edit it expecting it to change live behavior.
 **Verification:** `curl -I https://fromcampuscareer.com` shows all headers live; the CSP
 allows the Turnstile script/iframe with zero violations.
 
@@ -241,6 +245,28 @@ server/DB boundary, sanitize `href` URLs, escape email input, no `VITE_` secrets
 errors, anti-abuse on writes, locked buckets, CSP, webhook secrets, no `.temp`). It is wired
 into `.github/pull_request_template.md` so reviewers check them on every PR.
 
+### LOW-3 — Supabase advisor (linter) hardening  *(migrations `020`, `021`)*
+Follow-up hardening surfaced by the Supabase security advisor after the earlier waves.
+None of these was an active anon-exploitable hole; all are defense-in-depth.
+- **`020`** pins a non-mutable `search_path` on `record_status_audit()`, `set_updated_at()`,
+  and `coffee_chat_set_approved_at()` (so a caller-set `search_path` can't influence a
+  `SECURITY DEFINER`/trigger function), and revokes `EXECUTE` on the internal trigger/event
+  functions `record_status_audit()` and `rls_auto_enable()` from `anon`/`authenticated`/
+  `public` — they're only ever invoked by triggers, never meant to be callable via
+  `/rest/v1/rpc`.
+- **`021`** revokes `anon`/`PUBLIC` `EXECUTE` on the five coffee-chat admin RPCs
+  (`admin_approve_coffee_chat_profile`, `admin_reject_coffee_chat_profile`,
+  `admin_set_featured_coffee_chat_profile`, `admin_list_pending_coffee_chat_profiles`,
+  `is_coffee_chat_admin`), granting `authenticated`/`service_role` only — these already
+  self-gated via `is_coffee_chat_admin()` (anon carries no JWT email), so this narrows the
+  advisor-flagged RPC surface without a functional change. It also drops the
+  `avatar_public_read` SELECT policy on `storage.objects`: the `avatars` bucket is public
+  and serves object URLs directly (no policy consulted), so that policy only enabled
+  bucket-wide key **listing/enumeration**, which the client never uses.
+**Verification:** `npm run build` succeeds; avatar upload/display and coffee-chat admin
+actions (as an authenticated admin) are unaffected; `supabase/functions/**` calls unaffected
+(they use the service role).
+
 ### `coffee-chat-welcome` — secured + repurposed  *(follow-up)*
 This orphaned function was `verify_jwt=false` with no secret check — an open email-send/spam
 vector. It is now gated by `verify_jwt=true` + an `x-webhook-secret` shared secret (the
@@ -271,7 +297,7 @@ the form referenced.
 | `RESEND_API_KEY` | all email functions | Resend API |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` / `SUPABASE_SECRET_KEYS` | service-role functions | privileged DB access (auto-provided) |
 
-### Frontend env vars (Cloudflare Pages — PUBLIC by design, shipped in the bundle)
+### Frontend env vars (Vercel — PUBLIC by design, shipped in the bundle)
 | Variable | Notes |
 |---|---|
 | `VITE_SUPABASE_URL` | project URL — public |
@@ -290,12 +316,17 @@ the form referenced.
 ### Migrations added by the audit
 `005` lock insert status · `006` lock PII columns · `007` revoke anon insert ·
 `008` https URL checks · `009` storage hardening · `010` audit log ·
-`011` input constraints · `012` revoke panelists insert · `013` opportunities location/pay.
+`011` input constraints · `012` revoke panelists insert · `013` opportunities location/pay ·
+`017` revoke subscribers insert (HIGH-N1) · `018` revoke waitlist insert (MED-N2) ·
+`019` revoke secondary-form inserts (MED-N1) · `020` DB function search_path + internal
+RPC EXECUTE hardening · `021` lock coffee-chat admin RPCs to authenticated/service_role +
+drop avatar-listing storage policy (see LOW-3 in section 7 for detail on `020`/`021`).
 
 ### Edge functions
 `submit-form` (verify_jwt=false, Turnstile) · `send-contact-email` / `add-to-waitlist`
 (verify_jwt=false, Turnstile) · `send-welcome-email` / `coffee-chat-welcome`
-(verify_jwt=true, webhook secret) · `verify-turnstile` (legacy, superseded by submit-form).
+(verify_jwt=true, webhook secret). The legacy `verify-turnstile` function (superseded by
+`submit-form`) has been deleted.
 
 ---
 

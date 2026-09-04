@@ -2,8 +2,8 @@
 
 Operational runbook for backing up and restoring the production database and
 storage for this project (Supabase Postgres 17, project ref
-`kdkeerhukydxwoycjuwl`, region `us-east-1`). Hosting is Cloudflare Pages +
-Supabase. This addresses security-audit item **LOW-1**.
+`kdkeerhukydxwoycjuwl`, region `us-east-1`). Hosting is Vercel (frontend) +
+Supabase (backend). This addresses security-audit item **LOW-1**.
 
 > **Audience:** the operator (project owner). Run the
 > [validation command](#validate) once end-to-end before trusting this runbook.
@@ -162,12 +162,14 @@ Use this to rebuild from scratch (project deleted, corrupted, or migrating).
    ```
 
 3. **Apply schema via migrations** (source of truth is
-   `supabase/migrations/`, applied in numeric order 001→011):
+   `supabase/migrations/`, applied in numeric order 001→021):
    ```bash
    supabase db push
    ```
    This recreates all tables, RLS policies, the `audit_log`, input constraints,
-   AND the storage buckets + storage policies (migration `009`).
+   AND the storage buckets + storage policies (migration `009`). A fresh
+   `db push` against an empty project has been verified to complete cleanly
+   through migration `021`.
 
 4. **Restore data** from the most recent backup:
    ```bash
@@ -214,7 +216,7 @@ Use this to rebuild from scratch (project deleted, corrupted, or migrating).
    backup (resume PDFs, avatars).
 
 8. **Update the frontend** if the project ref changed: rotate the Supabase URL /
-   publishable key in the Cloudflare Pages environment variables and redeploy.
+   publishable key in the Vercel project's environment variables and redeploy.
 
 9. **Smoke tests / verify** (step 5 of the audit):
    - Submit the contact form and the waitlist form → confirm a new row appears
@@ -259,7 +261,7 @@ This is a future enhancement; the manual weekly export in §2 is the baseline.
   in your own secrets manager; they are not in git or any dump.
 - **Auth users** — if/when Supabase Auth is used, the `auth` schema is not in a
   `--schema=public` dump. Add `--schema=auth` (or a full dump) if needed.
-- **Cloudflare config / Pages env vars** (Supabase URL, publishable key, build
+- **Vercel project config / env vars** (Supabase URL, publishable key, build
   settings) — back these up separately.
 - **DNS, domain, and third-party config** (Resend, Turnstile keys/site config).
 - **Realtime / cron / extension state** beyond what the migrations recreate.

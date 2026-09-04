@@ -1,5 +1,8 @@
 # Security Audit — Fresh Pass (2026-06)
 
+> *Resolution status last updated 2026-07 — see the status notes on HIGH-N1, MED-N1, MED-N2,
+> and LOW-N1 below; those items are now fixed.*
+
 This is a **fresh** audit of the *current* codebase, run after the 2026-06 hardening
 documented in `docs/SECURITY.md`. The 18 fixes in that document were re-verified and
 **still hold** (column-scoped reads, forced server-side status, revoked anon INSERT on the
@@ -7,11 +10,16 @@ four moderated tables, escaped email HTML, webhook secrets, CSP/headers, locked 
 `safeHttpUrl` at href sinks, no `VITE_` secrets in the bundle). Production `npm audit` is
 clean.
 
-The findings below are issues the prior audit **did not close** — almost all in the same
-bug class it was built to prevent (HIGH-1: *"anti-abuse on public writes; revoke anon INSERT
-when gating via a function"*), but applied to only 4 of the ~12 anon-writable tables. The
-other ~8 "request / suggestion / subscriber" tables were never brought into the trusted
-insert path.
+The findings below were originally issues the prior audit **did not close** — almost all in
+the same bug class it was built to prevent (HIGH-1: *"anti-abuse on public writes; revoke
+anon INSERT when gating via a function"*), but applied to only 4 of the ~12 anon-writable
+tables. The other ~8 "request / suggestion / subscriber" tables were never brought into the
+trusted insert path.
+
+> **Status update:** HIGH-N1, MED-N1, and MED-N2 have since been **fixed and merged**
+> (migrations `017`, `019`, and `018` respectively — see each section below for details).
+> LOW-N1 has also been resolved; the `verify-turnstile` function no longer exists in the
+> tree. The implementation prompts below are kept as a historical record of what was done.
 
 Priority order: **Critical → High → Medium → Low**. Skip nothing except items marked ⛔ N/A.
 
@@ -26,13 +34,14 @@ the current tree.)*
 
 ## High
 
-### HIGH-N1 — Unauthenticated newsletter signup is an email-amplification vector  *(measure #51)*
+### HIGH-N1 — Unauthenticated newsletter signup is an email-amplification vector  *(measure #51)*  ✅ RESOLVED
 
-> **⚠️ DECISION NEEDED — see "Decisions" at the bottom.** How to gate the newsletter
-> signup (extend `submit-form` with a `subscriber` type vs. a dedicated function), and
-> whether the welcome email should keep firing on every signup.
+> **Fixed in migration `017`.** Option (a) from the "Decisions" section below was taken:
+> the newsletter signup was routed through `submit-form` (Turnstile + service-role insert)
+> and direct anon `INSERT` on `subscribers` was revoked. The instant welcome email was
+> kept, now firing only on legitimate gated signups.
 
-**Current state (BUG).** The `subscribers` table accepts a direct, unauthenticated anon
+**Original state (BUG, now fixed).** The `subscribers` table accepted a direct, unauthenticated anon
 `INSERT` (`subscribers_insert ... WITH CHECK (true)`, `001_initial_schema.sql:21`) with **no
 Turnstile and no rate limit**. A Supabase **database webhook** (`on-new-subscriber`) fires on
 every insert and calls `send-welcome-email`, which sends a Resend email to
@@ -89,13 +98,12 @@ against direct calls, but left the table insert that *triggers* it wide open.
 
 ## Medium
 
-### MED-N1 — Secondary request/suggestion forms accept ungated anon inserts  *(measure #52)*
+### MED-N1 — Secondary request/suggestion forms accept ungated anon inserts  *(measure #52)*  ✅ RESOLVED
 
-> **⚠️ DECISION NEEDED — see "Decisions".** Whether to fully gate all six forms (Turnstile
-> + `submit-form` + revoke anon INSERT, the most work / a UX change on each form) or accept
-> them as low-value spam targets with DB-side mitigation only.
+> **Fixed in migration `019`.** Option (a) from the "Decisions" section below was taken:
+> all six forms were fully gated (Turnstile + `submit-form` + revoke anon INSERT).
 
-**Current state (BUG).** Six more tables take direct, unauthenticated anon `INSERT` with
+**Original state (BUG, now fixed).** Six more tables took direct, unauthenticated anon `INSERT` with
 `WITH CHECK (true)` and **no Turnstile / no throttle**. Unlike `subscribers` they have **no
 read-back** (no anon SELECT policy) and **no email trigger**, so the impact is **write-spam /
 junk-row flooding** and forced manual moderation — not data exposure. (`panel_suggestions`'s
@@ -127,9 +135,12 @@ verified server-side — the gate is cosmetic.)
 - `grep -rn "\.insert(" src/pages/CareerTemplates.jsx src/pages/ResumeCompanies.jsx src/pages/BridgeYear.jsx src/pages/InterviewPrep.jsx src/pages/PartnerPanels.jsx src/pages/LinkedInSeries.jsx` shows no direct table inserts remain for these tables.
 - `npm run build` succeeds.
 
-### MED-N2 — `waitlist_subscribers` anon INSERT never revoked (Turnstile gate bypassable)  *(measure #53)*
+### MED-N2 — `waitlist_subscribers` anon INSERT never revoked (Turnstile gate bypassable)  *(measure #53)*  ✅ RESOLVED
 
-**Current state (BUG).** The waitlist flow runs through the Turnstile-gated `add-to-waitlist`
+> **Fixed in migration `018`.** Anon `INSERT` on `waitlist_subscribers` was revoked; the
+> `add-to-waitlist` function's service-role insert was untouched, as planned.
+
+**Original state (BUG, now fixed).** The waitlist flow ran through the Turnstile-gated `add-to-waitlist`
 edge function (which inserts with the **service role**), but the table still has an open anon
 `INSERT` policy (`003_waitlist_subscribers.sql:17`, `WITH CHECK (true)`) and anon INSERT was
 **never revoked** (migration `007` covered only coffee-chat/resume/opportunity). So an
@@ -157,24 +168,20 @@ function, not by a webhook), so impact is junk rows only.
 
 ## Low
 
-### LOW-N1 — Delete the unused legacy `verify-turnstile` edge function  *(measure #54)*
+### LOW-N1 — Delete the unused legacy `verify-turnstile` edge function  *(measure #54)*  ✅ RESOLVED
 
-**Current state.** `supabase/functions/verify-turnstile/index.ts` is dead code — superseded
-by `submit-form` (docs/SECURITY.md §8 calls it "legacy"). No frontend code calls it
-(`grep` for `functions/v1/` finds only `send-contact-email`, `add-to-waitlist`,
-`submit-form`). It is deployed `--no-verify-jwt`, uses a *different* secret name
-(`TURNSTILE_SECRET_KEY` vs the live `TURNSTILE_SECRET`), and **returns `err.message` to the
-client** (`:64`), a minor HIGH-5-class leak. It performs no privileged action (token verify
-only), so risk is low — but it should not exist.
+**Original state.** `supabase/functions/verify-turnstile/index.ts` was dead code — superseded
+by `submit-form` (docs/SECURITY.md §8 called it "legacy"). No frontend code called it
+(`grep` for `functions/v1/` found only `send-contact-email`, `add-to-waitlist`,
+`submit-form`). It was deployed `--no-verify-jwt`, used a *different* secret name
+(`TURNSTILE_SECRET_KEY` vs the live `TURNSTILE_SECRET`), and **returned `err.message` to the
+client** (`:64`), a minor HIGH-5-class leak. It performed no privileged action (token verify
+only), so risk was low — but it shouldn't have existed.
 
-**File/line refs.** `supabase/functions/verify-turnstile/index.ts` (whole dir); leak at `:64`.
-
-**Implementation prompt (self-contained).**
-> Delete the `supabase/functions/verify-turnstile/` directory. Confirm nothing references it:
-> `grep -rn "verify-turnstile" src supabase` should return nothing after deletion (the
-> function is not listed in `supabase/config.toml`, so no config change is needed). If it is
-> still deployed, note in the commit body that the operator should also run
-> `supabase functions delete verify-turnstile`. Touch ONLY `supabase/functions/verify-turnstile/`.
+**Resolution.** The `supabase/functions/verify-turnstile/` directory has been deleted.
+`grep -rn "verify-turnstile" src supabase` returns nothing. If it was ever deployed, confirm
+`supabase functions delete verify-turnstile` was also run against the live project so the
+deployed copy doesn't linger with the stale secret name.
 
 **Verification.** `grep -rn "verify-turnstile" src supabase` returns nothing; `npm run build` succeeds.
 
@@ -225,7 +232,8 @@ with no apparent use in the app (Google Fonts uses `fonts.gstatic.com`, already 
 origins in the CSP"). There is also no explicit `object-src 'none'` (covered transitively by
 `default-src 'self'`, but worth pinning).
 
-**File/line refs.** `public/_headers:7`, `vercel.json:12` (the two must stay mirrored).
+**File/line refs.** `vercel.json:12`. (`public/_headers` is an inert leftover from the
+pre-Vercel Cloudflare Pages setup — not read by the current host, no need to edit it.)
 
 **Implementation prompt (self-contained).**
 > Confirm nothing in the app loads an image from `www.google.com` or `gstatic.com`
@@ -260,9 +268,9 @@ origins in the CSP"). There is also no explicit `object-src 'none'` (covered tra
 
 ---
 
-## Decisions (answer before any wave runs)
+## Decisions (resolved — kept as a record of what was chosen)
 
-1. **HIGH-N1 — newsletter gating approach.**
+1. **HIGH-N1 — newsletter gating approach.** ✅ Option (a) was chosen (migration `017`).
    - (a) **[Recommended]** Add a `subscriber` type to `submit-form` (Turnstile + service-role
      insert), revoke anon INSERT, wire both subscribe boxes through it. Consistent with every
      other form; adds a Turnstile challenge to the inline email box.
@@ -271,7 +279,7 @@ origins in the CSP"). There is also no explicit `object-src 'none'` (covered tra
      email-amplification vector open).
    - Also: keep the instant welcome email on signup? (Recommended: yes — gating fixes the abuse.)
 
-2. **MED-N1 — secondary-forms scope.**
+2. **MED-N1 — secondary-forms scope.** ✅ Option (a) was chosen (migration `019`).
    - (a) **[Recommended]** Fully gate all six (Turnstile + `submit-form` + revoke anon INSERT).
      Most work; adds a Turnstile widget to six forms.
    - (b) Revoke anon INSERT + DB mitigations only, defer the Turnstile UX (faster, leaves the
