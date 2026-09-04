@@ -164,9 +164,11 @@ function buildRow(type: string, payload: Record<string, unknown>): Record<string
         submitted_by: trimOrNull(payload.submitted_by),
         location: trimOrNull(payload.location),
         pay: trimOrNull(payload.pay),
-        // Force server-side — opportunities are auto-published (status 'approved') so
-        // they show on the board immediately. Coffee-chat/panelists stay moderated.
-        status: 'approved',
+        // Force server-side — opportunities enter the moderation queue, same as
+        // panelist applications (issue #94). An admin promotes to 'approved' or
+        // 'featured' via the queries in supabase/admin-queries.sql before the row
+        // becomes public (see the opportunities_read_approved RLS policy).
+        status: 'pending',
       }
     case 'panelist':
       return {
