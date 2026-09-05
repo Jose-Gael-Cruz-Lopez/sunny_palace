@@ -200,10 +200,15 @@ oversize).
 ### MED-2 — Overly permissive CORS  *(measure #27)*
 `send-contact-email` and `add-to-waitlist` returned `Access-Control-Allow-Origin: *`. All
 three browser-facing functions now share one per-request helper that echoes the request
-`Origin` **only** if it's in the `ALLOWED_ORIGINS` allow-list (otherwise omits the header),
-falling back to `*` only when the var is unset (local dev). `Vary: Origin` is set.
+`Origin` **only** if it's in the `ALLOWED_ORIGINS` allow-list (otherwise omits the header).
+`Vary: Origin` is set.
 **Verification:** `Origin: https://evil.com` gets no ACAO header; `fromcampuscareer.com` is
 echoed.
+
+**Update (issue #92):** the `ALLOWED_ORIGINS`-unset case used to fail *open*, defaulting to
+`Access-Control-Allow-Origin: *`. It now fails *closed* (omits the ACAO header) unless the
+operator explicitly opts into the permissive local-dev fallback via
+`ALLOW_ALL_ORIGINS_DEV=true`.
 
 ### MED-3 — Thin server-side input validation  *(measure #16)*
 Validation existed only client-side (bypassable via REST). The edge functions now validate
@@ -294,6 +299,7 @@ the form referenced.
 | `TURNSTILE_SECRET` | submit-form, send-contact-email, add-to-waitlist | verify Turnstile tokens |
 | `WEBHOOK_SECRET` | send-welcome-email, coffee-chat-welcome | shared-secret webhook gate |
 | `ALLOWED_ORIGINS` | submit-form, send-contact-email, add-to-waitlist | CORS allow-list (e.g. `https://fromcampuscareer.com`) |
+| `ALLOW_ALL_ORIGINS_DEV` | submit-form, send-contact-email, add-to-waitlist | set to `true` to opt into the permissive `*` CORS fallback (local dev only) when `ALLOWED_ORIGINS` is unset |
 | `RESEND_API_KEY` | all email functions | Resend API |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` / `SUPABASE_SECRET_KEYS` | service-role functions | privileged DB access (auto-provided) |
 

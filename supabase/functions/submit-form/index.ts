@@ -19,10 +19,15 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.107.0'
 // fields and whitelist columns so a crafted client payload can't self-approve a row.
 
 // Allow-list of origins permitted to make cross-origin requests. Comma-separated
-// in ALLOWED_ORIGINS (e.g. `https://fromcampuscareer.com`). When unset, fall back
-// to `*` for local dev only.
+// in ALLOWED_ORIGINS (e.g. `https://fromcampuscareer.com`). When unset, CORS
+// fails closed (no ACAO header) unless ALLOW_ALL_ORIGINS_DEV=true opts into
+// the permissive `*` fallback for local dev.
 const ALLOWED_ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') ?? '')
   .split(',').map((o) => o.trim()).filter(Boolean)
+// Explicit opt-in for the permissive local-dev CORS fallback (issue #92: CORS
+// previously failed OPEN — defaulting to `*` — whenever ALLOWED_ORIGINS was
+// unset. Now it fails CLOSED unless this flag is deliberately set.)
+const ALLOW_ALL_ORIGINS_DEV = Deno.env.get('ALLOW_ALL_ORIGINS_DEV') === 'true'
 const TURNSTILE_SECRET = Deno.env.get('TURNSTILE_SECRET')
 const MAX_BODY_BYTES = 1_000_000 // ~1MB — these are JSON rows, not file uploads.
 
@@ -33,9 +38,14 @@ const EMAIL_REGEX = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 // Cap long free-text fields so a crafted client can't push a 100k-char value
 // through to the DB. Mirrors the char_length caps in migration 011.
 const MAX_LONGTEXT = 5000
+// Cap short identifier-ish fields (names, titles, emails, ...). Mirrors the
+// char_length(...) <= 500 caps in migration 011 for the columns that have
+// one; also applied to `email`, which migration 011 checks for FORMAT but,
+// on every table, never bounds by length (issue #92).
+const MAX_SHORTTEXT = 500
 
-// Build CORS headers per request: echo the request Origin only if it's allow-listed,
-// fall back to `*` when no allow-list is configured, otherwise omit the ACAO header.
+// Build CORS headers per request: echo the request Origin only if it's allow-listed;
+// otherwise omit the ACAO header (fail closed), unless ALLOW_ALL_ORIGINS_DEV=true.
 function corsHeadersFor(req: Request): Record<string, string> {
   const origin = req.headers.get('Origin') ?? ''
   const base: Record<string, string> = {
@@ -43,12 +53,18 @@ function corsHeadersFor(req: Request): Record<string, string> {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Vary': 'Origin',
   }
-  if (ALLOWED_ORIGINS.length === 0) {
-    base['Access-Control-Allow-Origin'] = '*' // local dev fallback only
-  } else if (origin && ALLOWED_ORIGINS.includes(origin)) {
-    base['Access-Control-Allow-Origin'] = origin
+  if (ALLOWED_ORIGINS.length > 0) {
+    if (origin && ALLOWED_ORIGINS.includes(origin)) {
+      base['Access-Control-Allow-Origin'] = origin
+    }
+    // else: omit the ACAO header entirely (browser will block cross-origin)
+  } else if (ALLOW_ALL_ORIGINS_DEV) {
+    // No allow-list configured, but the operator explicitly opted into the
+    // permissive local-dev fallback.
+    base['Access-Control-Allow-Origin'] = '*'
   }
-  // else: omit the ACAO header entirely (browser will block cross-origin)
+  // else: ALLOWED_ORIGINS unset and the dev fallback isn't enabled — fail
+  // CLOSED by omitting the ACAO header, rather than defaulting to `*`.
   return base
 }
 
@@ -350,8 +366,9 @@ Deno.serve(async (req) => {
       return json({ error: 'Verification failed' }, 403)
     }
 
-    // 2. Validate type → table.
-    if (!type || !(type in TABLE_BY_TYPE)) {
+    // 2. Validate type → table. Object.hasOwn (not `in`) so a crafted type like
+    // "constructor" or "toString" can't match something off Object.prototype.
+    if (!type || !Object.hasOwn(TABLE_BY_TYPE, type)) {
       return json({ error: 'Invalid submission type' }, 400)
     }
     const table = TABLE_BY_TYPE[type]
@@ -381,12 +398,26 @@ Deno.serve(async (req) => {
         return json({ error: 'Invalid submission' }, 400)
       }
     }
-    const longTextFields = ['story', 'topics', 'why', 'eligibility', 'target_companies', 'request', 'description', 'help_needed', 'why_helpful', 'topic']
+    // Long free-text columns (char_length(...) <= 5000 in migration 011).
+    const longTextFields = ['story', 'topics', 'why', 'eligibility', 'target_companies', 'request', 'description', 'help_needed', 'why_helpful', 'topic', 'interested_in', 'notes']
     for (const field of longTextFields) {
       const val = row[field]
       if (typeof val === 'string' && val.length > MAX_LONGTEXT) {
         return json({ error: 'Invalid submission' }, 400)
       }
+    }
+    // Short identifier-ish columns (char_length(...) <= 500 in migration 011).
+    const shortTextFields = ['name', 'role', 'company', 'submitted_by', 'location', 'role_title', 'handle', 'file_name', 'program_name']
+    for (const field of shortTextFields) {
+      const val = row[field]
+      if (typeof val === 'string' && val.length > MAX_SHORTTEXT) {
+        return json({ error: 'Invalid submission' }, 400)
+      }
+    }
+    // Email length: every email column has a format CHECK but none has a
+    // length CHECK (issue #92) — bound it here at the trust boundary instead.
+    if (typeof row.email === 'string' && row.email.length > MAX_SHORTTEXT) {
+      return json({ error: 'Invalid submission' }, 400)
     }
 
     // 3. Service-role client (bypasses RLS). Prefer the new secret key, fall back

@@ -7,6 +7,7 @@ import { COMPANIES } from '../data/companies'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
 import Turnstile, { TURNSTILE_ENABLED } from '../components/Turnstile'
+import { safeHttpUrl } from '../lib/safeUrl'
 
 const LIKES_KEY = 'jxj_resume_likes_v1'
 
@@ -1054,8 +1055,8 @@ export default function ResumeReviews() {
                         }
                       </div>
                       <div className="rr-card__info">
-                        {r.avatarUrl
-                          ? <img className="rr-card__avatar" src={r.avatarUrl} alt="" />
+                        {safeHttpUrl(r.avatarUrl)
+                          ? <img className="rr-card__avatar" src={safeHttpUrl(r.avatarUrl)} alt="" />
                           : <span className="rr-card__avatar-fallback">{(r.handle?.[0] || '?').toUpperCase()}</span>
                         }
                         <div className="rr-card__id">
