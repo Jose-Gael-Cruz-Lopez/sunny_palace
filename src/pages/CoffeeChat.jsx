@@ -974,7 +974,7 @@ export default function CoffeeChat() {
             <article key={p.id} className={`cc-card${p.badge === 'New' ? ' cc-card--new' : ''}`} style={{ '--cc-i': idx % 12 }}>
               <div className="cc-card__top">
                 <div className="cc-card__avatar">
-                  {p.avatarUrl ? <img src={safeHttpUrl(p.avatarUrl)} alt="" /> : p.initial}
+                  {safeHttpUrl(p.avatarUrl) ? <img src={safeHttpUrl(p.avatarUrl)} alt="" /> : p.initial}
                 </div>
                 <div className="cc-card__id">
                   <div className="cc-card__name">{p.name}</div>
@@ -1145,6 +1145,8 @@ export default function CoffeeChat() {
                     <input
                       className={`cc-form-input${fieldErrors.func && !funcOtherText.trim() ? ' is-invalid' : ''}`}
                       type="text"
+                      id="ccFuncOther"
+                      aria-label={t.formFunctionOtherPlaceholder}
                       placeholder={t.formFunctionOtherPlaceholder}
                       value={funcOtherText}
                       onChange={e => { setFuncOtherText(e.target.value); if (fieldErrors.func) setFieldErrors(s => ({ ...s, func: '' })) }}
@@ -1165,6 +1167,8 @@ export default function CoffeeChat() {
                     <input
                       className="cc-form-input"
                       type="text"
+                      id="ccIdentityOther"
+                      aria-label={t.formIdentityOtherPlaceholder}
                       placeholder={t.formIdentityOtherPlaceholder}
                       value={identityOtherText}
                       onChange={e => setIdentityOtherText(e.target.value)}

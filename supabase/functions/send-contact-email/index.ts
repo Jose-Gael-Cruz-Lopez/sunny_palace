@@ -86,6 +86,12 @@ Deno.serve(async (req) => {
     return new Response('Method not allowed', { status: 405, headers: corsHeaders })
   }
 
+  // Fail closed rather than sending Resend a "Bearer undefined" request.
+  if (!RESEND_API_KEY) {
+    console.error('RESEND_API_KEY is not configured; rejecting request')
+    return new Response(JSON.stringify({ error: GENERIC_ERROR }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+  }
+
   try {
     const { name, email, message, turnstileToken } = await req.json()
 

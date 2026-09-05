@@ -60,6 +60,39 @@ const jsonWith = (corsHeaders: Record<string, string>) =>
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
 
+// Read a request body up to maxBytes, counting real bytes (not UTF-16 code
+// units) as they stream in, and bail out as soon as the cap is exceeded
+// instead of buffering the whole — potentially oversized — body into memory
+// first. Returns null on any body larger than maxBytes.
+async function readBodyLimited(req: Request, maxBytes: number): Promise<string | null> {
+  if (!req.body) return ''
+  const reader = req.body.getReader()
+  const chunks: Uint8Array[] = []
+  let total = 0
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      if (!value) continue
+      total += value.byteLength
+      if (total > maxBytes) {
+        await reader.cancel()
+        return null
+      }
+      chunks.push(value)
+    }
+  } finally {
+    reader.releaseLock()
+  }
+  const buf = new Uint8Array(total)
+  let offset = 0
+  for (const chunk of chunks) {
+    buf.set(chunk, offset)
+    offset += chunk.byteLength
+  }
+  return new TextDecoder().decode(buf)
+}
+
 // Verify a Cloudflare Turnstile token. Returns true only on a verified human.
 async function verifyTurnstile(token: unknown, remoteip?: string | null): Promise<boolean> {
   if (!TURNSTILE_SECRET) {
@@ -292,8 +325,8 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const raw = await req.text()
-    if (raw.length > MAX_BODY_BYTES) {
+    const raw = await readBodyLimited(req, MAX_BODY_BYTES)
+    if (raw === null) {
       return json({ error: 'Payload too large' }, 413)
     }
 

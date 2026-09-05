@@ -105,7 +105,7 @@ function OBCard({ card, featured, t, idx = 0 }) {
           : <span className="ob-card__cta-primary ob-card__cta-primary--disabled" aria-disabled="true">{card.viewLabel || t.cardViewRole}</span>}
         {card.postLink && (safePost
           ? <a href={safePost} className="ob-card__cta-secondary" target="_blank" rel="noopener">{card.postLabel}</a>
-          : <Link to={card.postLink} className="ob-card__cta-secondary">{card.postLabel}</Link>
+          : <span className="ob-card__cta-secondary ob-card__cta-secondary--disabled" aria-disabled="true">{card.postLabel}</span>
         )}
       </div>
     </article>
