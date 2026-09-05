@@ -452,7 +452,7 @@ export default function CoffeeChat() {
     const processedIdentityChips = identityChips.map(c => c === 'Other' ? (identityOtherText.trim() || 'Other') : c)
     // Insert now flows through the Turnstile-gated submit-form edge function
     // (service role). status/public_profile are forced server-side.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',

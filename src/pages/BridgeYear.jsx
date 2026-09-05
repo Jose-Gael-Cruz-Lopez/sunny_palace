@@ -135,7 +135,7 @@ export default function BridgeYear() {
     // Suggestion now flows through the Turnstile-gated submit-form edge function
     // (service role) — the direct anon INSERT on bridge_year_suggestions is
     // revoked (migration 019) so the open write-spam path is closed.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',
@@ -190,7 +190,7 @@ export default function BridgeYear() {
     // Capture now flows through the Turnstile-gated submit-form edge function
     // (service role) — the direct anon INSERT on bridge_year_subscribers is
     // revoked (migration 019) so the open write-spam path is closed.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',
@@ -211,7 +211,7 @@ export default function BridgeYear() {
     setCaptureLoading(false)
     if (ok) {
       setCaptureSubmitted(true)
-      try { window.localStorage.setItem('jxj.bridge-year.subscribed', '1') } catch {}
+      try { window.localStorage.setItem('jxj.bridge-year.subscribed', '1') } catch { /* noop */ }
     } else {
       setCaptureError(t.captureErrorGeneric)
       setCaptureTurnstileToken('')

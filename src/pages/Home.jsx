@@ -93,7 +93,9 @@ export default function Home() {
   const pinataImgRef = useRef(null)
   const pinataHitsRef = useRef(0)
   const pinataBrokenRef = useRef(false)
-  const [pinataWrapClass, setPinataWrapClass] = useState('pinata--idle')
+  // Base pinata class — the hit/break animation manipulates classList directly via pinataRef
+  // rather than through React state, so this never needs to change.
+  const pinataWrapClass = 'pinata--idle'
   const [pinataVisible, setPinataVisible] = useState(true)
   const [pinataMsg, setPinataMsg] = useState('')
 
@@ -102,7 +104,6 @@ export default function Home() {
   const galleryRef = useRef(null)
   const loaderRef = useRef(null)
   const loaderFillRef = useRef(null)
-  const gsapCtxRef = useRef(null)
   const modalRef = useRef(null)
 
   const openModal = useCallback((e) => {
@@ -546,7 +547,7 @@ export default function Home() {
           try {
             const resolved = new URL(href, window.location.href)
             if (resolved.origin + resolved.pathname !== window.location.origin + window.location.pathname) return
-          } catch {}
+          } catch { /* noop */ }
         }
       }
       const { clientX: x, clientY: y } = e

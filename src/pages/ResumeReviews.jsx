@@ -274,7 +274,7 @@ export default function ResumeReviews() {
     setLikedIds(prev => {
       const next = new Set(prev)
       if (next.has(id)) next.delete(id); else next.add(id)
-      try { localStorage.setItem(LIKES_KEY, JSON.stringify([...next])) } catch {}
+      try { localStorage.setItem(LIKES_KEY, JSON.stringify([...next])) } catch { /* noop */ }
       return next
     })
   }
@@ -484,7 +484,7 @@ export default function ResumeReviews() {
     // (service role); the resume PDF + avatar were already uploaded to storage above.
     // status is forced to 'approved' server-side, so the row is published immediately
     // and we re-fetch the public list on success.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',

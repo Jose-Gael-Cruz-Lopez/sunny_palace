@@ -84,7 +84,7 @@ export default function InterviewPrep() {
     // Request now flows through the Turnstile-gated submit-form edge function
     // (service role) — the direct anon INSERT on interview_prep_requests is
     // revoked (migration 019) so the open write-spam path is closed.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',

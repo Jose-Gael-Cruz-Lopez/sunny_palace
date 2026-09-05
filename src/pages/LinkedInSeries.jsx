@@ -1,25 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useState, useRef } from 'react'
 import ArticleLayout from '../components/ArticleLayout'
 import { useT } from '../hooks/useT'
 import Turnstile, { TURNSTILE_ENABLED } from '../components/Turnstile'
-
-// Hide the episode roadmap browser (filters + jump-to TOC + episodes 01–10).
-// Flip to true to restore the full episode-browsing section.
-
-// Stable structural data — canonical keys only, no display strings
-const EPISODES = [
-  { num: '01', lens: 'both', topics: 'internships rejection', tags: ['internships', 'rejection'], posts: [{ type: 'announcement', author: 'both', status: 'coming-soon' }, { type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap-cta', author: 'both', status: 'coming-soon' }] },
-  { num: '02', lens: 'jose', topics: 'internships', tags: ['internships'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'carousel', author: 'jose', status: 'coming-soon' }] },
-  { num: '03', lens: 'jocelyn', topics: 'offers on-the-job', tags: ['offers', 'on-the-job'], posts: [{ type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'carousel', author: 'jocelyn', status: 'coming-soon' }] },
-  { num: '04', lens: 'both', topics: 'offers', tags: ['offers'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'carousel', author: 'both', status: 'coming-soon' }] },
-  { num: '05', lens: 'jose', topics: 'internships', tags: ['internships'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'carousel', author: 'jose', status: 'coming-soon' }] },
-  { num: '06', lens: 'jocelyn', topics: 'on-the-job', tags: ['on-the-job'], posts: [{ type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'carousel', author: 'jocelyn', status: 'coming-soon' }] },
-  { num: '07', lens: 'both', topics: 'rejection', tags: ['rejection'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap', author: 'both', status: 'coming-soon' }] },
-  { num: '08', lens: 'both', topics: 'internships', tags: ['internships'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'carousel', author: 'both', status: 'coming-soon' }] },
-  { num: '09', lens: 'both', topics: 'internships offers on-the-job', tags: ['internships', 'offers', 'on-the-job'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap', author: 'both', status: 'coming-soon' }] },
-  { num: '10', lens: 'both', topics: 'internships offers rejection on-the-job', tags: ['internships', 'offers', 'rejection', 'on-the-job'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap-cta', author: 'both', status: 'coming-soon' }] },
-]
 
 // Published LinkedIn posts. Render above the episode grid so the live drops are the first content after the hero.
 // Only the single most-recent drop headlines the "Latest from the series" section.
@@ -73,9 +55,6 @@ const PUBLISHED_GROUPS = [
 // Total published posts on the page — drives the hero stat so it never desyncs from the data.
 const PUBLISHED_COUNT = LIVE_POSTS.length + PUBLISHED_GROUPS.reduce((n, g) => n + g.posts.length, 0)
 
-function lensClass(a) {
-  return a === 'jose' ? 'ls-ep__lens--jose' : a === 'jocelyn' ? 'ls-ep__lens--jocelyn' : 'ls-ep__lens--both'
-}
 function authorClass(a) {
   return a === 'jose' ? 'ls-post__author--jose' : a === 'jocelyn' ? 'ls-post__author--jocelyn' : 'ls-post__author--both'
 }
@@ -325,31 +304,22 @@ const PAGE_CSS = `
   }
 `
 
-// Maps canonical type key → translation key
-const TYPE_KEY_MAP = {
-  'announcement': 'typeAnnouncement',
-  'student-lens': 'typeStudentLens',
-  'post-grad-lens': 'typePostGradLens',
-  'recap-cta': 'typeRecapCTA',
-  'carousel': 'typeCarousel',
-  'recap': 'typeRecap',
-}
-
-// Maps canonical tag key → translation key
-const TAG_KEY_MAP = {
-  'internships': 'tagInternships',
-  'offers': 'tagOffers',
-  'rejection': 'tagRejection',
-  'on-the-job': 'tagOnTheJob',
-}
-
 export default function LinkedInSeries() {
   const t = useT('linkedInSeries')
 
-  const [searchParams, setSearchParams] = useSearchParams()
-  const filtersRef = useRef(null)
-
-
+  // "Suggest a topic" form state. Was previously lost from this component —
+  // handleSubmit and the JSX below reference these, but nothing declared them,
+  // so this whole section threw ReferenceErrors on render (issue #81 lint pass).
+  const [topic, setTopic] = useState('')
+  const [email, setEmail] = useState('')
+  const [category, setCategory] = useState('')
+  const [categoryOther, setCategoryOther] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({ topic: '', email: '', category: '' })
+  const [formLoading, setFormLoading] = useState(false)
+  const [formError, setFormError] = useState('')
+  const [formSubmitted, setFormSubmitted] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState('')
+  const turnstileReset = useRef(null)
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -372,7 +342,7 @@ export default function LinkedInSeries() {
     // Request now flows through the Turnstile-gated submit-form edge function
     // (service role) — the direct anon INSERT on linkedin_episode_requests is
     // revoked (migration 019) so the open write-spam path is closed.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',

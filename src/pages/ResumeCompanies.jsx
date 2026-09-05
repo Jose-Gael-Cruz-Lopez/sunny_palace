@@ -56,6 +56,10 @@ export default function ResumeCompanies() {
       })
   }, [])
 
+  useEffect(() => {
+    if (companiesError) console.error('Failed to load company counts:', companiesError)
+  }, [companiesError])
+
 
   const allCompanies = useMemo(() => {
     return Object.entries(COMPANY_CATALOG).map(([key, meta]) => ({
@@ -97,7 +101,7 @@ export default function ResumeCompanies() {
     // Request now flows through the Turnstile-gated submit-form edge function
     // (service role) — the direct anon INSERT on template_requests is revoked
     // (migration 019) so the open write-spam path is closed.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',

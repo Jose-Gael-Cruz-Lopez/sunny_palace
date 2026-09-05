@@ -209,6 +209,10 @@ export default function OpportunityBoard() {
     fetchOpportunities()
   }, [fetchOpportunities])
 
+  useEffect(() => {
+    if (dbError) console.error('Failed to load opportunities:', dbError)
+  }, [dbError])
+
 
   const filters = { tab, query: search.toLowerCase().trim(), stage, location, deadline }
 
@@ -243,7 +247,7 @@ export default function OpportunityBoard() {
     // (service role). status is forced to 'pending' server-side (issue #94) — the
     // row enters the moderation queue and only appears on the board once an admin
     // approves it via supabase/admin-queries.sql.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',

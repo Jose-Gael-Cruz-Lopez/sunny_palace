@@ -205,7 +205,7 @@ export default function PartnerPanels() {
     // Suggestion now flows through the Turnstile-gated submit-form edge function
     // (service role) — the direct anon INSERT on panel_suggestions is revoked
     // (migration 019) so the open write-spam path is closed.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',
@@ -255,7 +255,7 @@ export default function PartnerPanels() {
     setPanelistError('')
     // Insert now flows through the Turnstile-gated submit-form edge function
     // (service role). status is forced to 'pending' server-side (moderation queue).
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',
