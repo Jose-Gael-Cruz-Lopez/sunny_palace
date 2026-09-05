@@ -269,6 +269,7 @@ export default function Home() {
   }, [])
 
   const handleNewsletterSubmit = useCallback(async () => {
+    if (newsletterLoading) return
     if (!newsletterEmail.trim()) return
     if (TURNSTILE_ENABLED && !newsletterToken) return
     setNewsletterLoading(true)
@@ -305,7 +306,7 @@ export default function Home() {
     } finally {
       setNewsletterLoading(false)
     }
-  }, [newsletterEmail, newsletterToken, t])
+  }, [newsletterEmail, newsletterToken, newsletterLoading, t])
 
   const handleNewsletterKeyDown = useCallback((e) => {
     if (e.key !== 'Tab' || !newsletterRef.current) return

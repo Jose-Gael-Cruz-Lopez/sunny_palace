@@ -26,7 +26,14 @@ export function LanguageProvider({ children }) {
   useEffect(() => {
     if (lang === 'es' && !esDict) {
       let cancelled = false
-      import('../translations/es').then(m => { if (!cancelled) setEsDict(m.es) })
+      import('../translations/es')
+        .then(m => { if (!cancelled) setEsDict(m.es) })
+        .catch(err => {
+          // Chunk failed to load (offline, flaky network, ...). We already
+          // degrade to English (see `dict` below), but log it so a silent,
+          // permanent fallback to English isn't invisible in diagnostics.
+          if (!cancelled) console.error('Failed to load Spanish translations:', err)
+        })
       return () => { cancelled = true }
     }
   }, [lang, esDict])

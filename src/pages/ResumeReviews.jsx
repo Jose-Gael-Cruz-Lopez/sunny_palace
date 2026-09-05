@@ -471,10 +471,14 @@ export default function ResumeReviews() {
       const ext = AVATAR_EXT[avatarFile.type]
       const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
       const { error: avErr } = await supabase.storage.from('avatars').upload(path, avatarFile, { contentType: safeMime })
-      if (!avErr) {
-        const { data } = supabase.storage.from('avatars').getPublicUrl(path)
-        avatar_url = data.publicUrl
+      if (avErr) {
+        console.error('Avatar upload error:', avErr)
+        setSubmitLoading(false)
+        setSubmitError(t.formErrorUpload)
+        return
       }
+      const { data } = supabase.storage.from('avatars').getPublicUrl(path)
+      avatar_url = data.publicUrl
     }
     // Insert now flows through the Turnstile-gated submit-form edge function
     // (service role); the resume PDF + avatar were already uploaded to storage above.

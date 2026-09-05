@@ -211,6 +211,13 @@ export default function CoffeeChat() {
   const [photoFile, setPhotoFile] = useState(null)
   const [photoPreview, setPhotoPreview] = useState(null)
   const [photoError, setPhotoError] = useState('')
+  // Revoke the previous blob: preview URL whenever it's replaced or cleared,
+  // and on unmount — React runs this cleanup (with the *previous* photoPreview
+  // value) right before the effect re-runs for a new one, so a single effect
+  // covers "pick a new photo", "remove", and "navigate away mid-selection".
+  useEffect(() => {
+    return () => { if (photoPreview) URL.revokeObjectURL(photoPreview) }
+  }, [photoPreview])
   const [funcOtherText, setFuncOtherText] = useState('')
   const [identityOtherText, setIdentityOtherText] = useState('')
   const [formData, setFormData] = useState({
@@ -432,10 +439,14 @@ export default function CoffeeChat() {
       const ext = AVATAR_EXT[photoFile.type]
       const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
       const { error: uploadError } = await supabase.storage.from('avatars').upload(path, photoFile, { contentType: safeMime })
-      if (!uploadError) {
-        const { data } = supabase.storage.from('avatars').getPublicUrl(path)
-        avatar_url = data.publicUrl
+      if (uploadError) {
+        console.error('Avatar upload error:', uploadError)
+        setFormLoading(false)
+        setPhotoError(t.formPhotoErrorUpload)
+        return
       }
+      const { data } = supabase.storage.from('avatars').getPublicUrl(path)
+      avatar_url = data.publicUrl
     }
     const processedFuncChips = funcChips.map(c => c === 'Other' ? (funcOtherText.trim() || 'Other') : c)
     const processedIdentityChips = identityChips.map(c => c === 'Other' ? (identityOtherText.trim() || 'Other') : c)
