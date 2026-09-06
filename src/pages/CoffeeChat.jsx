@@ -417,66 +417,53 @@ export default function CoffeeChat() {
       setFormError(t.formErrorGeneric)
       return
     }
-    setFieldErrors({ name: '', email: '', linkedin: '', role: '', func: '', topics: '', capacity: '', consent1: '', consent2: '' })
-    setFormLoading(true)
-    setFormError('')
-    let avatar_url = null
+    // Fast client-side check before spending a round trip — the server
+    // re-validates this itself (issue #79), since a client-side check alone
+    // can always be bypassed.
     if (photoFile) {
-      // Validate the avatar against an allow-list BEFORE uploading. We never
-      // trust photoFile.type for the stored contentType (it is user-controlled);
-      // instead we map the validated type to an explicit MIME from the allow-list.
-      const AVATAR_MIME = { 'image/png': 'image/png', 'image/jpeg': 'image/jpeg', 'image/webp': 'image/webp' }
+      const AVATAR_ALLOWED = ['image/png', 'image/jpeg', 'image/webp']
       const AVATAR_MAX_BYTES = 2 * 1024 * 1024 // 2MB — matches the bucket file_size_limit
-      const AVATAR_EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' }
-      const safeMime = AVATAR_MIME[photoFile.type]
-      if (!safeMime || photoFile.size > AVATAR_MAX_BYTES) {
-        setFormLoading(false)
+      if (!AVATAR_ALLOWED.includes(photoFile.type) || photoFile.size > AVATAR_MAX_BYTES) {
         setPhotoError('Please upload a PNG, JPEG, or WebP under 2MB.')
         return
       }
-      // Derive the storage-key extension from the validated MIME, never from the
-      // user-controlled filename, so a crafted name can't shape the storage path.
-      const ext = AVATAR_EXT[photoFile.type]
-      const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(path, photoFile, { contentType: safeMime })
-      if (uploadError) {
-        console.error('Avatar upload error:', uploadError)
-        setFormLoading(false)
-        setPhotoError(t.formPhotoErrorUpload)
-        return
-      }
-      const { data } = supabase.storage.from('avatars').getPublicUrl(path)
-      avatar_url = data.publicUrl
     }
+    setFieldErrors({ name: '', email: '', linkedin: '', role: '', func: '', topics: '', capacity: '', consent1: '', consent2: '' })
+    setFormLoading(true)
+    setFormError('')
     const processedFuncChips = funcChips.map(c => c === 'Other' ? (funcOtherText.trim() || 'Other') : c)
     const processedIdentityChips = identityChips.map(c => c === 'Other' ? (identityOtherText.trim() || 'Other') : c)
-    // Insert now flows through the Turnstile-gated submit-form edge function
-    // (service role). status/public_profile are forced server-side.
+    // Submission (including the avatar file, if any) flows through the
+    // Turnstile-gated submit-form edge function as multipart/form-data — the
+    // avatar is uploaded server-side, AFTER Turnstile verification, so an
+    // unverified request can no longer reach storage directly (issue #79).
+    // status/public_profile are forced server-side.
+    const form = new FormData()
+    form.set('type', 'coffee_chat')
+    form.set('turnstileToken', turnstileToken)
+    form.set('payload', JSON.stringify({
+      name: formData.name,
+      pronouns: formData.pronouns || null,
+      email: formData.email,
+      linkedin_url: formData.linkedin,
+      role_title: formData.role,
+      location: formData.location || null,
+      role_function: processedFuncChips,
+      identity_tags: processedIdentityChips,
+      topics: formData.topics,
+      capacity: formData.capacity,
+    }))
+    if (photoFile) form.set('avatar', photoFile)
     let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          // No Content-Type here — the browser sets multipart/form-data with
+          // the correct boundary itself when the body is a FormData instance.
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
         },
-        body: JSON.stringify({
-          type: 'coffee_chat',
-          turnstileToken,
-          payload: {
-            name: formData.name,
-            pronouns: formData.pronouns || null,
-            email: formData.email,
-            linkedin_url: formData.linkedin,
-            role_title: formData.role,
-            location: formData.location || null,
-            role_function: processedFuncChips,
-            identity_tags: processedIdentityChips,
-            topics: formData.topics,
-            capacity: formData.capacity,
-            avatar_url,
-          },
-        }),
+        body: form,
       })
       ok = res.ok
     } catch {
