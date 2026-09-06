@@ -1016,6 +1016,7 @@ export const en = {
     formPhotoHint: 'JPG, PNG or GIF · Max 2MB',
     formPhotoRemove: 'Remove',
     formPhotoErrorSize: 'Photo must be under 2MB.',
+    formPhotoErrorUpload: 'Your photo could not be uploaded. Please try again.',
     formLabelName: 'Full Name',
     formPlaceholderName: 'Your full name',
     formLabelPronouns: 'Pronouns',

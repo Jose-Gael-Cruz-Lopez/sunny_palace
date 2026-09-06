@@ -105,7 +105,7 @@ function OBCard({ card, featured, t, idx = 0 }) {
           : <span className="ob-card__cta-primary ob-card__cta-primary--disabled" aria-disabled="true">{card.viewLabel || t.cardViewRole}</span>}
         {card.postLink && (safePost
           ? <a href={safePost} className="ob-card__cta-secondary" target="_blank" rel="noopener">{card.postLabel}</a>
-          : <Link to={card.postLink} className="ob-card__cta-secondary">{card.postLabel}</Link>
+          : <span className="ob-card__cta-secondary ob-card__cta-secondary--disabled" aria-disabled="true">{card.postLabel}</span>
         )}
       </div>
     </article>
@@ -149,7 +149,7 @@ export default function OpportunityBoard() {
   }
 
   const [dbOpportunities, setDbOpportunities] = useState([])
-
+  const [dbError, setDbError] = useState(null)
   useEffect(() => {
     let raf = 0
     const update = () => {
@@ -194,7 +194,13 @@ export default function OpportunityBoard() {
       .select('id,role,company,role_type,link,deadline,eligibility,why,status,created_at,location,pay')
       .in('status', ['approved', 'featured'])
       .order('created_at', { ascending: false })
-      .then(({ data }) => {
+      .limit(20)
+      .then(({ data, error }) => {
+        if (error) {
+          setDbError(error)
+          return
+        }
+        setDbError(null)
         if (data?.length) setDbOpportunities(data.map(row => dbOpportunityToCard(row, t)))
       })
   }, [t])
@@ -202,6 +208,10 @@ export default function OpportunityBoard() {
   useEffect(() => {
     fetchOpportunities()
   }, [fetchOpportunities])
+
+  useEffect(() => {
+    if (dbError) console.error('Failed to load opportunities:', dbError)
+  }, [dbError])
 
 
   const filters = { tab, query: search.toLowerCase().trim(), stage, location, deadline }
@@ -234,9 +244,10 @@ export default function OpportunityBoard() {
     setFormLoading(true)
     setFormError('')
     // Insert now flows through the Turnstile-gated submit-form edge function
-    // (service role). status is forced to 'approved' server-side, so the row is
-    // published immediately and we re-fetch the public list on success.
-    let ok = false
+    // (service role). status is forced to 'pending' server-side (issue #94) — the
+    // row enters the moderation queue and only appears on the board once an admin
+    // approves it via supabase/admin-queries.sql.
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',
@@ -274,8 +285,8 @@ export default function OpportunityBoard() {
       setFormSubmitted(true)
       setTurnstileToken('')
       turnstileReset.current?.()
-      // Row is live (approved) — re-fetch so the new opportunity appears in the board.
-      fetchOpportunities()
+      // Row is pending review — it won't appear on the public board until an
+      // admin approves it, so there's nothing new to fetch yet.
     }
   }
 
@@ -638,8 +649,8 @@ export default function OpportunityBoard() {
             {formSubmitted ? (
               <div className="ob-form-success">
                 <div className="ob-form-success__icon">✓</div>
-                <div className="ob-form-success__title">Your opportunity is now live</div>
-                <p className="ob-form-success__body">It has been added to the board below for the community to see. Thank you for helping keep the board current.</p>
+                <div className="ob-form-success__title">{t.formSuccessTitle}</div>
+                <p className="ob-form-success__body">{t.formSuccessBody}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>

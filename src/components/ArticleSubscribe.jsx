@@ -26,7 +26,7 @@ export default function ArticleSubscribe({ source }) {
     // role) instead of a direct anon insert — the anon INSERT on subscribers is
     // revoked (migration 017) so the welcome-email webhook can't be abused. A 409
     // means the email is already subscribed: treat it (and a 2xx) as success.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',

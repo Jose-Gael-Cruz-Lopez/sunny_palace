@@ -1,8 +1,14 @@
 node_modules/
 dist/
 .DS_Store
-.env.local
-.env*.local
+
+# All dotenv variants (.env, .env.production, .env.development, .env.local,
+# .env.production.local, etc.) — issue #92: only the *.local patterns were
+# covered, so a plain .env or .env.production would not have been ignored.
+.env
+.env.*
+!.env.example
+
 .worktrees/
 
 # Local tool/session files — not part of the project

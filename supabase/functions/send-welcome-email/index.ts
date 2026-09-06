@@ -50,6 +50,12 @@ Deno.serve(async (req) => {
     return new Response('Unauthorized', { status: 401 })
   }
 
+  // Fail closed rather than sending Resend a "Bearer undefined" request.
+  if (!RESEND_API_KEY) {
+    console.error('RESEND_API_KEY is not configured; rejecting request')
+    return new Response('Email service not configured', { status: 500 })
+  }
+
   try {
     const payload = await req.json()
     const record = payload.record

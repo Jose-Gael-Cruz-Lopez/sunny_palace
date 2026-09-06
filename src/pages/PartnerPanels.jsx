@@ -108,11 +108,18 @@ function addToCalendar(title, start, end) {
     'END:VEVENT', 'END:VCALENDAR',
   ].join('\r\n')
   const blob = new Blob([ics], { type: 'text/calendar' })
+  const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
-  a.href = URL.createObjectURL(blob)
+  a.href = url
   a.download = title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.ics'
+  // Some browsers (notably older Firefox) only fire the download reliably
+  // when the anchor is actually in the DOM at click time.
+  document.body.appendChild(a)
   a.click()
-  URL.revokeObjectURL(a.href)
+  document.body.removeChild(a)
+  // Defer revocation so the browser has started the download before the
+  // blob URL is invalidated, rather than racing it immediately after click().
+  setTimeout(() => URL.revokeObjectURL(url), 0)
 }
 
 export default function PartnerPanels() {
@@ -198,7 +205,7 @@ export default function PartnerPanels() {
     // Suggestion now flows through the Turnstile-gated submit-form edge function
     // (service role) — the direct anon INSERT on panel_suggestions is revoked
     // (migration 019) so the open write-spam path is closed.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',
@@ -248,7 +255,7 @@ export default function PartnerPanels() {
     setPanelistError('')
     // Insert now flows through the Turnstile-gated submit-form edge function
     // (service role). status is forced to 'pending' server-side (moderation queue).
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',

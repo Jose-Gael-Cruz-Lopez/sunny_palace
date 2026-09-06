@@ -27,6 +27,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Lint. Fails the job if the frontend source has any ESLint errors
+      # (see eslint.config.js) — e.g. undeclared/undefined references that a
+      # bundler happily ships but that crash at runtime (issue #81).
+      - name: Lint
+        run: npm run lint
+
+      # Unit/smoke tests (vitest). Currently covers safeHttpUrl, the
+      # sanitizer gating every user-submitted link rendered as an href.
+      - name: Test
+        run: npm run test
+
       # Production build. Fails the job (and blocks the PR, once required)
       # if anything doesn't compile/bundle — e.g. an unresolved import.
       - name: Build

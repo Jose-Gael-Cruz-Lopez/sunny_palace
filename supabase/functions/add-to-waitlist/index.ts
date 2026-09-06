@@ -29,13 +29,18 @@ function escapeHtml(str: string): string {
 }
 
 // Allow-list of origins permitted to make cross-origin requests. Comma-separated
-// in ALLOWED_ORIGINS (e.g. `https://fromcampuscareer.com`). When unset, fall back
-// to `*` for local dev only.
+// in ALLOWED_ORIGINS (e.g. `https://fromcampuscareer.com`). When unset, CORS
+// fails closed (no ACAO header) unless ALLOW_ALL_ORIGINS_DEV=true opts into
+// the permissive `*` fallback for local dev.
 const ALLOWED_ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') ?? '')
   .split(',').map((o) => o.trim()).filter(Boolean)
+// Explicit opt-in for the permissive local-dev CORS fallback (issue #92: CORS
+// previously failed OPEN — defaulting to `*` — whenever ALLOWED_ORIGINS was
+// unset. Now it fails CLOSED unless this flag is deliberately set.)
+const ALLOW_ALL_ORIGINS_DEV = Deno.env.get('ALLOW_ALL_ORIGINS_DEV') === 'true'
 
-// Build CORS headers per request: echo the request Origin only if it's allow-listed,
-// fall back to `*` when no allow-list is configured, otherwise omit the ACAO header.
+// Build CORS headers per request: echo the request Origin only if it's allow-listed;
+// otherwise omit the ACAO header (fail closed), unless ALLOW_ALL_ORIGINS_DEV=true.
 function corsHeadersFor(req: Request): Record<string, string> {
   const origin = req.headers.get('Origin') ?? ''
   const base: Record<string, string> = {
@@ -43,12 +48,18 @@ function corsHeadersFor(req: Request): Record<string, string> {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Vary': 'Origin',
   }
-  if (ALLOWED_ORIGINS.length === 0) {
-    base['Access-Control-Allow-Origin'] = '*' // local dev fallback only
-  } else if (origin && ALLOWED_ORIGINS.includes(origin)) {
-    base['Access-Control-Allow-Origin'] = origin
+  if (ALLOWED_ORIGINS.length > 0) {
+    if (origin && ALLOWED_ORIGINS.includes(origin)) {
+      base['Access-Control-Allow-Origin'] = origin
+    }
+    // else: omit the ACAO header entirely (browser will block cross-origin)
+  } else if (ALLOW_ALL_ORIGINS_DEV) {
+    // No allow-list configured, but the operator explicitly opted into the
+    // permissive local-dev fallback.
+    base['Access-Control-Allow-Origin'] = '*'
   }
-  // else: omit the ACAO header entirely (browser will block cross-origin)
+  // else: ALLOWED_ORIGINS unset and the dev fallback isn't enabled — fail
+  // CLOSED by omitting the ACAO header, rather than defaulting to `*`.
   return base
 }
 

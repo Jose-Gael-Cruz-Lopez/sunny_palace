@@ -7,6 +7,7 @@ import { COMPANIES } from '../data/companies'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
 import Turnstile, { TURNSTILE_ENABLED } from '../components/Turnstile'
+import { safeHttpUrl } from '../lib/safeUrl'
 
 const LIKES_KEY = 'jxj_resume_likes_v1'
 
@@ -273,7 +274,7 @@ export default function ResumeReviews() {
     setLikedIds(prev => {
       const next = new Set(prev)
       if (next.has(id)) next.delete(id); else next.add(id)
-      try { localStorage.setItem(LIKES_KEY, JSON.stringify([...next])) } catch {}
+      try { localStorage.setItem(LIKES_KEY, JSON.stringify([...next])) } catch { /* noop */ }
       return next
     })
   }
@@ -345,6 +346,7 @@ export default function ResumeReviews() {
       .select('id,handle,role_title,role_type,stage,target_companies,background_tags,file_name,allow_download,story,allow_annotation,status,created_at,avatar_url')
       .in('status', ['approved', 'featured'])
       .order('created_at', { ascending: false })
+      .limit(15)
       .then(({ data }) => {
         if (data?.length) setDbResumes(data.map(dbResumeToCard))
         setIsLoading(false)
@@ -438,73 +440,53 @@ export default function ResumeReviews() {
       setSubmitError('Please upload a PDF under 5MB.')
       return
     }
-    setSubmitLoading(true)
-    setSubmitError('')
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
-    const storagePath = `pending/${Date.now()}-${safeName}`
-    const { error: uploadError } = await supabase.storage
-      .from('resumes')
-      .upload(storagePath, file, { contentType: 'application/pdf', upsert: false })
-    if (uploadError) {
-      setSubmitLoading(false)
-      setSubmitError(t.formErrorUpload)
-      return
-    }
-    let avatar_url = null
+    // Fast client-side check before spending a round trip — the server
+    // re-validates this itself (issue #79), since a client-side check alone
+    // can always be bypassed.
     if (avatarFile) {
-      // Validate the avatar against an allow-list BEFORE uploading. We never
-      // trust avatarFile.type for the stored contentType (it is user-controlled);
-      // instead we map the validated type to an explicit MIME from the allow-list.
-      const AVATAR_MIME = { 'image/png': 'image/png', 'image/jpeg': 'image/jpeg', 'image/webp': 'image/webp' }
+      const AVATAR_ALLOWED = ['image/png', 'image/jpeg', 'image/webp']
       const AVATAR_MAX_BYTES = 2 * 1024 * 1024 // 2MB — matches the bucket file_size_limit
-      const AVATAR_EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' }
-      const safeMime = AVATAR_MIME[avatarFile.type]
-      if (!safeMime || avatarFile.size > AVATAR_MAX_BYTES) {
-        setSubmitLoading(false)
+      if (!AVATAR_ALLOWED.includes(avatarFile.type) || avatarFile.size > AVATAR_MAX_BYTES) {
         setSubmitError('Please upload a PNG, JPEG, or WebP avatar under 2MB.')
         return
       }
-      // Derive the storage-key extension from the validated MIME, never from the
-      // user-controlled filename, so a crafted name can't shape the storage path.
-      const ext = AVATAR_EXT[avatarFile.type]
-      const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-      const { error: avErr } = await supabase.storage.from('avatars').upload(path, avatarFile, { contentType: safeMime })
-      if (!avErr) {
-        const { data } = supabase.storage.from('avatars').getPublicUrl(path)
-        avatar_url = data.publicUrl
-      }
     }
-    // Insert now flows through the Turnstile-gated submit-form edge function
-    // (service role); the resume PDF + avatar were already uploaded to storage above.
-    // status is forced to 'approved' server-side, so the row is published immediately
-    // and we re-fetch the public list on success.
-    let ok = false
+    setSubmitLoading(true)
+    setSubmitError('')
+    // Submission (resume PDF + optional avatar) flows through the Turnstile-gated
+    // submit-form edge function as multipart/form-data — both files are uploaded
+    // server-side, AFTER Turnstile verification, so an unverified request can no
+    // longer reach storage directly (issue #79). status is forced to 'approved'
+    // server-side, so the row is published immediately and we re-fetch the public
+    // list on success.
+    const form = new FormData()
+    form.set('type', 'resume')
+    form.set('turnstileToken', turnstileToken)
+    form.set('payload', JSON.stringify({
+      handle: submitForm.handle,
+      email: submitForm.email,
+      linkedin_url: submitForm.linkedin || null,
+      role_title: submitForm.roleTitle || null,
+      role_type: submitForm.roleType === 'other' ? submitForm.roleTypeOther.trim() : submitForm.roleType,
+      stage: submitForm.stage === 'other' ? submitForm.stageOther.trim() : submitForm.stage,
+      target_companies: submitForm.companies,
+      background_tags: submitForm.bgTags.map(tag => tag === 'other' ? submitForm.bgOther.trim() : tag).filter(Boolean),
+      allow_download: submitForm.download === 'yes',
+      story: submitForm.story || null,
+      allow_annotation: submitForm.annotate === 'yes',
+    }))
+    form.set('resume', file)
+    if (avatarFile) form.set('avatar', avatarFile)
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          // No Content-Type here — the browser sets multipart/form-data with
+          // the correct boundary itself when the body is a FormData instance.
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
         },
-        body: JSON.stringify({
-          type: 'resume',
-          turnstileToken,
-          payload: {
-            handle: submitForm.handle,
-            email: submitForm.email,
-            linkedin_url: submitForm.linkedin || null,
-            role_title: submitForm.roleTitle || null,
-            role_type: submitForm.roleType === 'other' ? submitForm.roleTypeOther.trim() : submitForm.roleType,
-            stage: submitForm.stage === 'other' ? submitForm.stageOther.trim() : submitForm.stage,
-            target_companies: submitForm.companies,
-            background_tags: submitForm.bgTags.map(tag => tag === 'other' ? submitForm.bgOther.trim() : tag).filter(Boolean),
-            allow_download: submitForm.download === 'yes',
-            story: submitForm.story || null,
-            allow_annotation: submitForm.annotate === 'yes',
-            file_name: storagePath,
-            avatar_url,
-          },
-        }),
+        body: form,
       })
       ok = res.ok
     } catch {
@@ -1053,8 +1035,8 @@ export default function ResumeReviews() {
                         }
                       </div>
                       <div className="rr-card__info">
-                        {r.avatarUrl
-                          ? <img className="rr-card__avatar" src={r.avatarUrl} alt="" />
+                        {safeHttpUrl(r.avatarUrl)
+                          ? <img className="rr-card__avatar" src={safeHttpUrl(r.avatarUrl)} alt="" />
                           : <span className="rr-card__avatar-fallback">{(r.handle?.[0] || '?').toUpperCase()}</span>
                         }
                         <div className="rr-card__id">

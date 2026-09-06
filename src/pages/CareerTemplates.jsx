@@ -176,7 +176,7 @@ export default function CareerTemplates() {
     // Request now flows through the Turnstile-gated submit-form edge function
     // (service role) — the direct anon INSERT on template_requests is revoked
     // (migration 019) so the open write-spam path is closed.
-    let ok = false
+    let ok
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-form`, {
         method: 'POST',
@@ -226,14 +226,6 @@ export default function CareerTemplates() {
     { key: 'offers', label: t.filterOffers, desc: t.filterOffersDesc },
     { key: 'job', label: t.filterJob, desc: t.filterJobDesc },
   ]
-
-  const LEGEND_LABELS = {
-    outreach: t.filterOutreach,
-    apply: t.filterApply,
-    interview: t.filterInterview,
-    offers: t.filterOffers,
-    job: t.filterJob,
-  }
 
   const visible = activeFilter === 'all'
     ? TEMPLATES
